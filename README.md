@@ -16,7 +16,7 @@ KCT ABAPdoc can be easily extended by plug-ins for other types of objects; or cu
 We will be glad if you send plug-ins developed by you to us (ideally as a SAPlink nugget). After the revision of these plugins we will publish them on Github for other users.
 
 If you need ABAPdoc in a form of SAPlink nuggets, contact us on  abapdoc@kctdata and we will export it for you.
-
+ 
 List of included Plug-ins (supported Object types):
 BSP
 CLASS
