@@ -1,4 +1,3 @@
-
 Repository and DDIC objects that are contained in this transport are prefixed with Z*KCT_ABAP_DOC* (it is not a SAP namespace) to avoid collision with existing customer specific development.
 
 ABAPdoc is based on components SAP_BASIS and SAP_ABA 7.00 (SAP ECC 6.00) with no dependence on other than standard SAP objects.
