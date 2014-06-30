@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:adoc="http://www.kctdata.cz/abapdoc" xmlns:step1="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:sapbpel4ws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+	xmlns:sapbpml="http://www.bpmi.org/2002/6/BPML" xmlns:saptns="http://www.sap.com"
+	xmlns:dublin="http://dublincore.org/documents/dces/" xmlns:SAP="http://www.sap.com/bc/bmt/wfm"
+	xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+	xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+	xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:activiti="http://activiti.org/bpmn"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<collaboration xmlns:xhtml="http://www.w3.org/TR/xhtml1/"
+		id="col.LEAVRQSTHTML">
+		<participant id="part.LEAVRQSTHTML" name="Leave Request with HTML"
+			processRef="LEAVRQSTHTML" />
+	</collaboration>
+	<process xmlns:xhtml="http://www.w3.org/TR/xhtml1/" id="LEAVRQSTHTML"
+		isExecutable="true">
+		<laneSet id="lset.LEAVRQSTHTML">
+			<lane id="locator__WF_INITIATOR" name="&amp;_WF_INITIATOR&amp;">
+				<flowNodeRef>SAP_0000000290</flowNodeRef>
+				<flowNodeRef>SAP_0000000192</flowNodeRef>
+			</lane>
+			<lane id="locator_SAP_0000000263" name="AC60100010">
+				<flowNodeRef>SAP_0000000263</flowNodeRef>
+			</lane>
+			<lane name="Background" id="Background">
+				<flowNodeRef>SAP_0000000191</flowNodeRef>
+				<flowNodeRef>SAP_0000000199</flowNodeRef>
+				<flowNodeRef>SAP_0000000204</flowNodeRef>
+				<flowNodeRef>SAP_0000000212</flowNodeRef>
+				<flowNodeRef>SAP_0000000205</flowNodeRef>
+				<flowNodeRef>SAP_0000000232</flowNodeRef>
+				<flowNodeRef>SAP_0000000240</flowNodeRef>
+				<flowNodeRef>SAP_0000000231</flowNodeRef>
+			</lane>
+		</laneSet>
+		<startEvent name="Start" id="start_of_process" />
+		<inclusiveGateway id="SAP_0000000004" name="UNTIL: Resubmission?" />
+		<sequenceFlow id="2_start_of_process.SAP_0000000004"
+			name="" sourceRef="start_of_process" targetRef="SAP_0000000004" />
+		<userTask id="SAP_0000000290" name="Check leave (with HTML)" />
+		<sequenceFlow id="1_SAP_0000000004.SAP_0000000290" name=""
+			sourceRef="SAP_0000000004" targetRef="SAP_0000000290" />
+		<exclusiveGateway id="SAP_0000000187"
+			name="SWITCH: Leave request approved?" />
+		<sequenceFlow id="2_SAP_0000000290.SAP_0000000187" name=""
+			sourceRef="SAP_0000000290" targetRef="SAP_0000000187" />
+		<subProcess id="SAP_0000000191" name="Find and Lock Employee" />
+		<sequenceFlow id="1_SAP_0000000187.SAP_0000000191" name="$tns:ACTUALSTATE = 'A'"
+			sourceRef="SAP_0000000187" targetRef="SAP_0000000191" />
+		<task id="SAP_0000000199" name="Create absence (without dialog)" />
+		<sequenceFlow id="2_SAP_0000000191.SAP_0000000199" name=""
+			sourceRef="SAP_0000000191" targetRef="SAP_0000000199" />
+		<exclusiveGateway id="SAP_0000000201" name="SWITCH: XOR" />
+		<sequenceFlow id="3_SAP_0000000199.SAP_0000000201" name=""
+			sourceRef="SAP_0000000199" targetRef="SAP_0000000201" />
+		<task id="SAP_0000000204" name="Unlock employee" />
+		<sequenceFlow id="1_SAP_0000000201.SAP_0000000204" name="$SAP:_WI_RESULT = '0'"
+			sourceRef="SAP_0000000201" targetRef="SAP_0000000204" />
+		<task id="SAP_0000000212" name="Confirm absence" />
+		<sequenceFlow id="2_SAP_0000000204.SAP_0000000212" name=""
+			sourceRef="SAP_0000000204" targetRef="SAP_0000000212" />
+		<sequenceFlow id="1_SAP_0000000212.end.SAP_0000000201"
+			name="" sourceRef="SAP_0000000212" targetRef="end.SAP_0000000201" />
+		<task id="SAP_0000000205" name="Unlock employee" />
+		<sequenceFlow id="1_SAP_0000000201.SAP_0000000205" name="$SAP:_WI_RESULT = '1'"
+			sourceRef="SAP_0000000201" targetRef="SAP_0000000205" />
+		<userTask id="SAP_0000000263"
+			name="Have absence created by administrator&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000205.SAP_0000000263" name=""
+			sourceRef="SAP_0000000205" targetRef="SAP_0000000263" />
+		<exclusiveGateway id="SAP_0000000264" name="SWITCH: XOR" />
+		<sequenceFlow id="3_SAP_0000000263.SAP_0000000264" name=""
+			sourceRef="SAP_0000000263" targetRef="SAP_0000000264" />
+		<task id="SAP_0000000231" name="Confirm absence" />
+		<sequenceFlow id="1_SAP_0000000264.SAP_0000000231" name="$SAP:_WI_RESULT = '0'"
+			sourceRef="SAP_0000000264" targetRef="SAP_0000000231" />
+		<sequenceFlow id="1_SAP_0000000231.end.SAP_0000000264"
+			name="" sourceRef="SAP_0000000231" targetRef="end.SAP_0000000264" />
+		<task id="SAP_0000000232"
+			name="Report absence error to initiator&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000264.SAP_0000000232" name="Exception code: SAP:8993"
+			sourceRef="SAP_0000000264" targetRef="SAP_0000000232" />
+		<task id="SAP_0000000240"
+			name="Report absence error to approver&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000232.SAP_0000000240" name=""
+			sourceRef="SAP_0000000232" targetRef="SAP_0000000240" />
+		<sequenceFlow id="2_SAP_0000000240.end.SAP_0000000264"
+			name="" sourceRef="SAP_0000000240" targetRef="end.SAP_0000000264" />
+		<inclusiveGateway id="end.SAP_0000000264" name="SWITCH" />
+		<sequenceFlow id="2_end.SAP_0000000264.end.SAP_0000000201"
+			name="" sourceRef="end.SAP_0000000264" targetRef="end.SAP_0000000201" />
+		<inclusiveGateway id="end.SAP_0000000201" name="SWITCH" />
+		<sequenceFlow id="1_end.SAP_0000000201.end.SAP_0000000187"
+			name="" sourceRef="end.SAP_0000000201" targetRef="end.SAP_0000000187" />
+		<userTask id="SAP_0000000192" name="Resubmission (with HTML)" />
+		<sequenceFlow id="1_SAP_0000000187.SAP_0000000192" name="otherwise"
+			sourceRef="SAP_0000000187" targetRef="SAP_0000000192" />
+		<sequenceFlow id="2_SAP_0000000192.end.SAP_0000000187"
+			name="" sourceRef="SAP_0000000192" targetRef="end.SAP_0000000187" />
+		<inclusiveGateway id="end.SAP_0000000187" name="SWITCH" />
+		<sequenceFlow id="1_end.SAP_0000000187.end.SAP_0000000004"
+			name="" sourceRef="end.SAP_0000000187" targetRef="end.SAP_0000000004" />
+		<sequenceFlow id="2_end.SAP_0000000004.SAP_0000000004"
+			name="go back" sourceRef="end.SAP_0000000004" targetRef="SAP_0000000004" />
+		<exclusiveGateway id="end.SAP_0000000004" name="UNTIL: Resubmission?" />
+		<endEvent name="End" id="end_of_process" />
+		<sequenceFlow id="5_end.SAP_0000000004.end_of_process"
+			name="" sourceRef="end.SAP_0000000004" targetRef="end_of_process" />
+	</process>
+	<bpmndi:BPMNDiagram id="BPMNDiagram_col.LEAVRQSTHTML">
+		<bpmndi:BPMNPlane id="BPMNPlane_col.LEAVRQSTHTML"
+			bpmnElement="col.LEAVRQSTHTML">
+			<bpmndi:BPMNShape bpmnElement="part.LEAVRQSTHTML"
+				id="BPMNShape_part.LEAVRQSTHTML">
+				<omgdc:Bounds height="840" width="3650" x="40" y="80" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="locator__WF_INITIATOR"
+				id="lane:locator__WF_INITIATOR">
+				<omgdc:Bounds height="240" width="3600" x="90" y="80" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="locator_SAP_0000000263"
+				id="lane:locator_SAP_0000000263">
+				<omgdc:Bounds height="240" width="3600" x="90" y="320" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="Background" id="lane:Background">
+				<omgdc:Bounds height="360" width="3600" x="90" y="560" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="start_of_process"
+				id="startEventstart_of_process">
+				<omgdc:Bounds height="40" width="40" x="340" y="590" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000004"
+				id="inclusiveGatewaySAP_0000000004">
+				<omgdc:Bounds height="50" width="50" x="540" y="602" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000290"
+				id="userTaskSAP_0000000290">
+				<omgdc:Bounds height="80" width="100" x="740" y="134" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000187"
+				id="exclusiveGatewaySAP_0000000187">
+				<omgdc:Bounds height="50" width="50" x="940" y="146" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000191"
+				id="subProcessSAP_0000000191">
+				<omgdc:Bounds height="80" width="100" x="1140" y="638" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000199" id="taskSAP_0000000199">
+				<omgdc:Bounds height="80" width="100" x="1340" y="650" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000201"
+				id="exclusiveGatewaySAP_0000000201">
+				<omgdc:Bounds height="50" width="50" x="1540" y="662" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000204" id="taskSAP_0000000204">
+				<omgdc:Bounds height="80" width="100" x="1740" y="674" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000212" id="taskSAP_0000000212">
+				<omgdc:Bounds height="80" width="100" x="1940" y="686" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000205" id="taskSAP_0000000205">
+				<omgdc:Bounds height="80" width="100" x="1760" y="794" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000263"
+				id="userTaskSAP_0000000263">
+				<omgdc:Bounds height="80" width="100" x="1940" y="446" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000264"
+				id="exclusiveGatewaySAP_0000000264">
+				<omgdc:Bounds height="50" width="50" x="2140"
+					y="458.00000000000006" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000231" id="taskSAP_0000000231">
+				<omgdc:Bounds height="80" width="100" x="2340" y="590" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000232" id="taskSAP_0000000232">
+				<omgdc:Bounds height="80" width="100" x="2360" y="710" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000240" id="taskSAP_0000000240">
+				<omgdc:Bounds height="80" width="100" x="2540" y="602" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.SAP_0000000264"
+				id="inclusiveGatewayend.SAP_0000000264">
+				<omgdc:Bounds height="50" width="50" x="2740" y="374" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.SAP_0000000201"
+				id="inclusiveGatewayend.SAP_0000000201">
+				<omgdc:Bounds height="50" width="50" x="2940" y="626" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000192"
+				id="userTaskSAP_0000000192">
+				<omgdc:Bounds height="80" width="100" x="1140" y="158" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.SAP_0000000187"
+				id="inclusiveGatewayend.SAP_0000000187">
+				<omgdc:Bounds height="50" width="50" x="3140" y="158" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.SAP_0000000004"
+				id="exclusiveGatewayend.SAP_0000000004">
+				<omgdc:Bounds height="50" width="50" x="3340" y="650" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end_of_process"
+				id="endEventend_of_process">
+				<omgdc:Bounds height="40" width="40" x="3540" y="662" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNEdge bpmnElement="2_start_of_process.SAP_0000000004"
+				id="edg:2_start_of_process.SAP_0000000004">
+				<omgdi:waypoint x="380" y="610" />
+				<omgdi:waypoint x="540" y="627" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000004.SAP_0000000290"
+				id="edg:1_SAP_0000000004.SAP_0000000290">
+				<omgdi:waypoint x="590" y="627" />
+				<omgdi:waypoint x="740" y="174" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000290.SAP_0000000187"
+				id="edg:2_SAP_0000000290.SAP_0000000187">
+				<omgdi:waypoint x="840" y="174" />
+				<omgdi:waypoint x="940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000187.SAP_0000000191"
+				id="edg:1_SAP_0000000187.SAP_0000000191">
+				<omgdi:waypoint x="990" y="171" />
+				<omgdi:waypoint x="1140" y="678" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000191.SAP_0000000199"
+				id="edg:2_SAP_0000000191.SAP_0000000199">
+				<omgdi:waypoint x="1240" y="678" />
+				<omgdi:waypoint x="1340" y="690" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="3_SAP_0000000199.SAP_0000000201"
+				id="edg:3_SAP_0000000199.SAP_0000000201">
+				<omgdi:waypoint x="1440" y="690" />
+				<omgdi:waypoint x="1540" y="687" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000201.SAP_0000000204"
+				id="edg:1_SAP_0000000201.SAP_0000000204">
+				<omgdi:waypoint x="1590" y="687" />
+				<omgdi:waypoint x="1740" y="714" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000204.SAP_0000000212"
+				id="edg:2_SAP_0000000204.SAP_0000000212">
+				<omgdi:waypoint x="1840" y="714" />
+				<omgdi:waypoint x="1940" y="726" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000212.end.SAP_0000000201"
+				id="edg:1_SAP_0000000212.end.SAP_0000000201">
+				<omgdi:waypoint x="2040" y="726" />
+				<omgdi:waypoint x="2940" y="651" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000201.SAP_0000000205"
+				id="edg:1_SAP_0000000201.SAP_0000000205">
+				<omgdi:waypoint x="1590" y="687" />
+				<omgdi:waypoint x="1760" y="834" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000205.SAP_0000000263"
+				id="edg:2_SAP_0000000205.SAP_0000000263">
+				<omgdi:waypoint x="1860" y="834" />
+				<omgdi:waypoint x="1940" y="486" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="3_SAP_0000000263.SAP_0000000264"
+				id="edg:3_SAP_0000000263.SAP_0000000264">
+				<omgdi:waypoint x="2040" y="486" />
+				<omgdi:waypoint x="2140" y="483.00000000000006" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000264.SAP_0000000231"
+				id="edg:1_SAP_0000000264.SAP_0000000231">
+				<omgdi:waypoint x="2190" y="483.00000000000006" />
+				<omgdi:waypoint x="2340" y="630" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000231.end.SAP_0000000264"
+				id="edg:1_SAP_0000000231.end.SAP_0000000264">
+				<omgdi:waypoint x="2440" y="630" />
+				<omgdi:waypoint x="2740" y="399" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000264.SAP_0000000232"
+				id="edg:1_SAP_0000000264.SAP_0000000232">
+				<omgdi:waypoint x="2190" y="483.00000000000006" />
+				<omgdi:waypoint x="2360" y="750" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000232.SAP_0000000240"
+				id="edg:2_SAP_0000000232.SAP_0000000240">
+				<omgdi:waypoint x="2460" y="750" />
+				<omgdi:waypoint x="2540" y="642" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000240.end.SAP_0000000264"
+				id="edg:2_SAP_0000000240.end.SAP_0000000264">
+				<omgdi:waypoint x="2640" y="642" />
+				<omgdi:waypoint x="2740" y="399" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_end.SAP_0000000264.end.SAP_0000000201"
+				id="edg:2_end.SAP_0000000264.end.SAP_0000000201">
+				<omgdi:waypoint x="2790" y="399" />
+				<omgdi:waypoint x="2940" y="651" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_end.SAP_0000000201.end.SAP_0000000187"
+				id="edg:1_end.SAP_0000000201.end.SAP_0000000187">
+				<omgdi:waypoint x="2990" y="651" />
+				<omgdi:waypoint x="3140" y="183" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000187.SAP_0000000192"
+				id="edg:1_SAP_0000000187.SAP_0000000192">
+				<omgdi:waypoint x="990" y="171" />
+				<omgdi:waypoint x="1140" y="198" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000192.end.SAP_0000000187"
+				id="edg:2_SAP_0000000192.end.SAP_0000000187">
+				<omgdi:waypoint x="1240" y="198" />
+				<omgdi:waypoint x="3140" y="183" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_end.SAP_0000000187.end.SAP_0000000004"
+				id="edg:1_end.SAP_0000000187.end.SAP_0000000004">
+				<omgdi:waypoint x="3190" y="183" />
+				<omgdi:waypoint x="3340" y="675" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_end.SAP_0000000004.SAP_0000000004"
+				id="edg:2_end.SAP_0000000004.SAP_0000000004">
+				<omgdi:waypoint x="3390" y="675" />
+				<omgdi:waypoint x="540" y="627" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="5_end.SAP_0000000004.end_of_process"
+				id="edg:5_end.SAP_0000000004.end_of_process">
+				<omgdi:waypoint x="3390" y="675" />
+				<omgdi:waypoint x="3540" y="682" />
+			</bpmndi:BPMNEdge>
+		</bpmndi:BPMNPlane>
+	</bpmndi:BPMNDiagram>
+</definitions>

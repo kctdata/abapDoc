@@ -1,0 +1,1220 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:adoc="http://www.kctdata.cz/abapdoc" xmlns:step1="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:sapbpml="http://www.bpmi.org/2002/6/BPML" xmlns:saptns="http://www.sap.com"
+	xmlns:dublin="http://dublincore.org/documents/dces/" xmlns:SAP="http://www.sap.com/bc/bmt/wfm"
+	xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+	xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+	xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:activiti="http://activiti.org/bpmn"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<collaboration xmlns:xhtml="http://www.w3.org/TR/xhtml1/"
+		id="col.ISUSuSwCheck">
+		<participant id="part.ISUSuSwCheck" name="ISU: Change of Supplier - Chck Framework"
+			processRef="ISUSuSwCheck" />
+	</collaboration>
+	<process xmlns:xhtml="http://www.w3.org/TR/xhtml1/" id="ISUSuSwCheck"
+		isExecutable="true">
+		<laneSet id="lset.ISUSuSwCheck">
+			<lane name="Background" id="Background">
+				<flowNodeRef>SAP_0000000019</flowNodeRef>
+				<flowNodeRef>SAP_0000000004</flowNodeRef>
+				<flowNodeRef>SAP_0000000037</flowNodeRef>
+				<flowNodeRef>SAP_0000000180</flowNodeRef>
+				<flowNodeRef>SAP_0000000385</flowNodeRef>
+				<flowNodeRef>SAP_0000000390</flowNodeRef>
+				<flowNodeRef>SAP_0000000086</flowNodeRef>
+				<flowNodeRef>SAP_0000000095</flowNodeRef>
+				<flowNodeRef>SAP_0000000101</flowNodeRef>
+				<flowNodeRef>SAP_0000000109</flowNodeRef>
+				<flowNodeRef>SAP_0000000115</flowNodeRef>
+				<flowNodeRef>SAP_0000000311</flowNodeRef>
+				<flowNodeRef>SAP_0000000374</flowNodeRef>
+				<flowNodeRef>SAP_0000000133</flowNodeRef>
+				<flowNodeRef>SAP_0000000471</flowNodeRef>
+				<flowNodeRef>SAP_0000000476</flowNodeRef>
+				<flowNodeRef>SAP_0000000276</flowNodeRef>
+				<flowNodeRef>SAP_0000000297</flowNodeRef>
+				<flowNodeRef>SAP_0000000303</flowNodeRef>
+				<flowNodeRef>SAP_0000000285</flowNodeRef>
+				<flowNodeRef>SAP_0000000291</flowNodeRef>
+				<flowNodeRef>SAP_0000000080</flowNodeRef>
+				<flowNodeRef>SAP_0000000377</flowNodeRef>
+				<flowNodeRef>SAP_0000000270</flowNodeRef>
+				<flowNodeRef>SAP_0000000413</flowNodeRef>
+				<flowNodeRef>SAP_0000000418</flowNodeRef>
+				<flowNodeRef>SAP_0000000139</flowNodeRef>
+				<flowNodeRef>SAP_0000000154</flowNodeRef>
+				<flowNodeRef>SAP_0000000160</flowNodeRef>
+				<flowNodeRef>SAP_0000000148</flowNodeRef>
+				<flowNodeRef>SAP_0000000166</flowNodeRef>
+				<flowNodeRef>SAP_0000000452</flowNodeRef>
+				<flowNodeRef>SAP_0000000457</flowNodeRef>
+				<flowNodeRef>SAP_0000000221</flowNodeRef>
+				<flowNodeRef>SAP_0000000244</flowNodeRef>
+				<flowNodeRef>SAP_0000000250</flowNodeRef>
+				<flowNodeRef>SAP_0000000230</flowNodeRef>
+				<flowNodeRef>SAP_0000000236</flowNodeRef>
+				<flowNodeRef>SAP_0000000174</flowNodeRef>
+				<flowNodeRef>SAP_0000000433</flowNodeRef>
+				<flowNodeRef>SAP_0000000438</flowNodeRef>
+				<flowNodeRef>SAP_0000000186</flowNodeRef>
+				<flowNodeRef>SAP_0000000195</flowNodeRef>
+				<flowNodeRef>SAP_0000000201</flowNodeRef>
+				<flowNodeRef>SAP_0000000207</flowNodeRef>
+				<flowNodeRef>SAP_0000000213</flowNodeRef>
+				<flowNodeRef>SAP_0000000338</flowNodeRef>
+				<flowNodeRef>SAP_0000000336</flowNodeRef>
+				<flowNodeRef>SAP_0000000350</flowNodeRef>
+			</lane>
+		</laneSet>
+		<startEvent name="Start" id="start_of_process" />
+		<task id="SAP_0000000004" name="Perform Check" />
+		<sequenceFlow id="2_start_of_process.SAP_0000000004"
+			name="" sourceRef="start_of_process" targetRef="SAP_0000000004" />
+		<exclusiveGateway id="SAP_0000000027"
+			name="SWITCH: Error Occurred During Check?" />
+		<sequenceFlow id="3_SAP_0000000004.SAP_0000000027" name=""
+			sourceRef="SAP_0000000004" targetRef="SAP_0000000027" />
+		<exclusiveGateway id="SAP_0000000354" name="SWITCH: Error Message Known?" />
+		<sequenceFlow id="1_SAP_0000000027.SAP_0000000354"
+			name="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING !=&#10;&#9;&#9;&#9;&#9;&#9;&#9;'0' and $tns:CHECKERRORMSG/ISU00_MESSAGE-MSGNO !=&#10;&#9;&#9;&#9;&#9;&#9;&#9;''"
+			sourceRef="SAP_0000000027" targetRef="SAP_0000000354" />
+		<task id="SAP_0000000037" name="Create Notification Object" />
+		<sequenceFlow id="1_SAP_0000000354.SAP_0000000037"
+			name="$tns:CHECKERRORMSG/ISU00_MESSAGE-MSGNO != '' " sourceRef="SAP_0000000354"
+			targetRef="SAP_0000000037" />
+		<sequenceFlow id="1_SAP_0000000037.end.SAP_0000000354"
+			name="" sourceRef="SAP_0000000037" targetRef="end.SAP_0000000354" />
+		<sequenceFlow id="2_SAP_0000000354.end.SAP_0000000354"
+			name="" sourceRef="SAP_0000000354" targetRef="end.SAP_0000000354" />
+		<inclusiveGateway id="end.SAP_0000000354" name="SWITCH" />
+		<sequenceFlow id="1_end.SAP_0000000354.end.SAP_0000000027"
+			name="" sourceRef="end.SAP_0000000354" targetRef="end.SAP_0000000027" />
+		<sequenceFlow id="2_SAP_0000000027.end.SAP_0000000027"
+			name="" sourceRef="SAP_0000000027" targetRef="end.SAP_0000000027" />
+		<inclusiveGateway id="end.SAP_0000000027" name="SWITCH" />
+		<exclusiveGateway id="SAP_0000000043" name="SWITCH: Result of Check" />
+		<sequenceFlow id="6_end.SAP_0000000027.SAP_0000000043"
+			name="" sourceRef="end.SAP_0000000027" targetRef="SAP_0000000043" />
+		<task id="SAP_0000000180" name="Status of Message Set to 014" />
+		<sequenceFlow id="1_SAP_0000000043.SAP_0000000180"
+			name="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'0'"
+			sourceRef="SAP_0000000043" targetRef="SAP_0000000180" />
+		<sequenceFlow id="1_SAP_0000000180.end.SAP_0000000043"
+			name="" sourceRef="SAP_0000000180" targetRef="end.SAP_0000000043" />
+		<task id="SAP_0000000086"
+			name="Temporary Error During Check &amp; for Switch&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Document &amp;" />
+		<sequenceFlow id="1_SAP_0000000043.SAP_0000000086"
+			name="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'1'"
+			sourceRef="SAP_0000000043" targetRef="SAP_0000000086" />
+		<exclusiveGateway id="SAP_0000000087" name="SWITCH: XOR" />
+		<sequenceFlow id="2_SAP_0000000086.SAP_0000000087" name=""
+			sourceRef="SAP_0000000086" targetRef="SAP_0000000087" />
+		<task id="SAP_0000000095"
+			name="Record Activity 200 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000087.SAP_0000000095"
+			name="$SAP:_WI_RESULT = 'Continue Processing / Data&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Modified Manually'"
+			sourceRef="SAP_0000000087" targetRef="SAP_0000000095" />
+		<task id="SAP_0000000101"
+			name="Set Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000095.SAP_0000000101" name=""
+			sourceRef="SAP_0000000095" targetRef="SAP_0000000101" />
+		<sequenceFlow id="1_SAP_0000000101.end.SAP_0000000087"
+			name="" sourceRef="SAP_0000000101" targetRef="end.SAP_0000000087" />
+		<task id="SAP_0000000109"
+			name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000087.SAP_0000000109"
+			name="$SAP:_WI_RESULT = 'Reject Notification / Cancel&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Processing'"
+			sourceRef="SAP_0000000087" targetRef="SAP_0000000109" />
+		<task id="SAP_0000000115"
+			name="Set Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000109.SAP_0000000115" name=""
+			sourceRef="SAP_0000000109" targetRef="SAP_0000000115" />
+		<sequenceFlow id="2_SAP_0000000115.end.SAP_0000000087"
+			name="" sourceRef="SAP_0000000115" targetRef="end.SAP_0000000087" />
+		<task id="SAP_0000000385"
+			name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000087.SAP_0000000385" name="Exception code: SAP:8991"
+			sourceRef="SAP_0000000087" targetRef="SAP_0000000385" />
+		<task id="SAP_0000000390"
+			name="Set Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000385.SAP_0000000390" name=""
+			sourceRef="SAP_0000000385" targetRef="SAP_0000000390" />
+		<sequenceFlow id="3_SAP_0000000390.end.SAP_0000000087"
+			name="" sourceRef="SAP_0000000390" targetRef="end.SAP_0000000087" />
+		<inclusiveGateway id="end.SAP_0000000087" name="SWITCH" />
+		<sequenceFlow id="2_end.SAP_0000000087.end.SAP_0000000043"
+			name="" sourceRef="end.SAP_0000000087" targetRef="end.SAP_0000000043" />
+		<task id="SAP_0000000311"
+			name="Set Status of Message to 006 (Terminated)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000043.SAP_0000000311"
+			name="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'2'"
+			sourceRef="SAP_0000000043" targetRef="SAP_0000000311" />
+		<sequenceFlow id="3_SAP_0000000311.end.SAP_0000000043"
+			name="" sourceRef="SAP_0000000311" targetRef="end.SAP_0000000043" />
+		<task id="SAP_0000000374"
+			name="Start Agent Information Asynchronously&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000043.SAP_0000000374"
+			name="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'3'"
+			sourceRef="SAP_0000000043" targetRef="SAP_0000000374" />
+		<task id="SAP_0000000133"
+			name="Set Status of Message to 006 (Terminated)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000374.SAP_0000000133" name=""
+			sourceRef="SAP_0000000374" targetRef="SAP_0000000133" />
+		<sequenceFlow id="4_SAP_0000000133.end.SAP_0000000043"
+			name="" sourceRef="SAP_0000000133" targetRef="end.SAP_0000000043" />
+		<task id="SAP_0000000276" name="Error During Check &amp; for Switch Document &amp; " />
+		<sequenceFlow id="1_SAP_0000000043.SAP_0000000276"
+			name="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'4'"
+			sourceRef="SAP_0000000043" targetRef="SAP_0000000276" />
+		<exclusiveGateway id="SAP_0000000277" name="SWITCH: XOR" />
+		<sequenceFlow id="2_SAP_0000000276.SAP_0000000277" name=""
+			sourceRef="SAP_0000000276" targetRef="SAP_0000000277" />
+		<task id="SAP_0000000297"
+			name="Record Activity 200 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000277.SAP_0000000297"
+			name="$SAP:_WI_RESULT = 'Continue Processing / Data&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Modified Manually'"
+			sourceRef="SAP_0000000277" targetRef="SAP_0000000297" />
+		<task id="SAP_0000000303"
+			name="Set Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000297.SAP_0000000303" name=""
+			sourceRef="SAP_0000000297" targetRef="SAP_0000000303" />
+		<sequenceFlow id="1_SAP_0000000303.end.SAP_0000000277"
+			name="" sourceRef="SAP_0000000303" targetRef="end.SAP_0000000277" />
+		<task id="SAP_0000000285"
+			name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000277.SAP_0000000285"
+			name="$SAP:_WI_RESULT = 'Reject Notification / Cancel&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Processing'"
+			sourceRef="SAP_0000000277" targetRef="SAP_0000000285" />
+		<task id="SAP_0000000291"
+			name="Set Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000285.SAP_0000000291" name=""
+			sourceRef="SAP_0000000285" targetRef="SAP_0000000291" />
+		<sequenceFlow id="2_SAP_0000000291.end.SAP_0000000277"
+			name="" sourceRef="SAP_0000000291" targetRef="end.SAP_0000000277" />
+		<task id="SAP_0000000471"
+			name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000277.SAP_0000000471" name="Exception code: SAP:8991"
+			sourceRef="SAP_0000000277" targetRef="SAP_0000000471" />
+		<task id="SAP_0000000476"
+			name="Set Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000471.SAP_0000000476" name=""
+			sourceRef="SAP_0000000471" targetRef="SAP_0000000476" />
+		<sequenceFlow id="3_SAP_0000000476.end.SAP_0000000277"
+			name="" sourceRef="SAP_0000000476" targetRef="end.SAP_0000000277" />
+		<inclusiveGateway id="end.SAP_0000000277" name="SWITCH" />
+		<sequenceFlow id="5_end.SAP_0000000277.end.SAP_0000000043"
+			name="" sourceRef="end.SAP_0000000277" targetRef="end.SAP_0000000043" />
+		<task id="SAP_0000000080"
+			name="Set Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000043.SAP_0000000080"
+			name="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'5'"
+			sourceRef="SAP_0000000043" targetRef="SAP_0000000080" />
+		<sequenceFlow id="6_SAP_0000000080.end.SAP_0000000043"
+			name="" sourceRef="SAP_0000000080" targetRef="end.SAP_0000000043" />
+		<task id="SAP_0000000377"
+			name="Start Agent Information Asynchronously&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000043.SAP_0000000377"
+			name="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'6'"
+			sourceRef="SAP_0000000043" targetRef="SAP_0000000377" />
+		<task id="SAP_0000000270"
+			name="Set Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000377.SAP_0000000270" name=""
+			sourceRef="SAP_0000000377" targetRef="SAP_0000000270" />
+		<sequenceFlow id="7_SAP_0000000270.end.SAP_0000000043"
+			name="" sourceRef="SAP_0000000270" targetRef="end.SAP_0000000043" />
+		<task id="SAP_0000000139"
+			name="Warning Triggered in Check &amp; for Switch&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Document" />
+		<sequenceFlow id="1_SAP_0000000043.SAP_0000000139"
+			name="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'7'"
+			sourceRef="SAP_0000000043" targetRef="SAP_0000000139" />
+		<exclusiveGateway id="SAP_0000000140" name="SWITCH: XOR" />
+		<sequenceFlow id="2_SAP_0000000139.SAP_0000000140" name=""
+			sourceRef="SAP_0000000139" targetRef="SAP_0000000140" />
+		<task id="SAP_0000000154"
+			name="Record Activity 200 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000140.SAP_0000000154"
+			name="$SAP:_WI_RESULT = 'Continue Processing / Data&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Modified Manually'"
+			sourceRef="SAP_0000000140" targetRef="SAP_0000000154" />
+		<task id="SAP_0000000160"
+			name="Set Status of Message to 014 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000154.SAP_0000000160" name=""
+			sourceRef="SAP_0000000154" targetRef="SAP_0000000160" />
+		<sequenceFlow id="1_SAP_0000000160.end.SAP_0000000140"
+			name="" sourceRef="SAP_0000000160" targetRef="end.SAP_0000000140" />
+		<task id="SAP_0000000148"
+			name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000140.SAP_0000000148"
+			name="$SAP:_WI_RESULT = 'Reject Notification / Cancel&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Processing'"
+			sourceRef="SAP_0000000140" targetRef="SAP_0000000148" />
+		<task id="SAP_0000000166" name="Message Status Set to 012" />
+		<sequenceFlow id="2_SAP_0000000148.SAP_0000000166" name=""
+			sourceRef="SAP_0000000148" targetRef="SAP_0000000166" />
+		<sequenceFlow id="2_SAP_0000000166.end.SAP_0000000140"
+			name="" sourceRef="SAP_0000000166" targetRef="end.SAP_0000000140" />
+		<task id="SAP_0000000413"
+			name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000140.SAP_0000000413" name="Exception code: SAP:8991"
+			sourceRef="SAP_0000000140" targetRef="SAP_0000000413" />
+		<task id="SAP_0000000418" name="Message Status Set to 012" />
+		<sequenceFlow id="2_SAP_0000000413.SAP_0000000418" name=""
+			sourceRef="SAP_0000000413" targetRef="SAP_0000000418" />
+		<sequenceFlow id="3_SAP_0000000418.end.SAP_0000000140"
+			name="" sourceRef="SAP_0000000418" targetRef="end.SAP_0000000140" />
+		<inclusiveGateway id="end.SAP_0000000140" name="SWITCH" />
+		<sequenceFlow id="8_end.SAP_0000000140.end.SAP_0000000043"
+			name="" sourceRef="end.SAP_0000000140" targetRef="end.SAP_0000000043" />
+		<task id="SAP_0000000221"
+			name="Unexpected Exception for Check &amp; for Switch&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Document &amp;" />
+		<sequenceFlow id="1_SAP_0000000043.SAP_0000000221"
+			name="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'8'"
+			sourceRef="SAP_0000000043" targetRef="SAP_0000000221" />
+		<exclusiveGateway id="SAP_0000000222" name="SWITCH: XOR" />
+		<sequenceFlow id="2_SAP_0000000221.SAP_0000000222" name=""
+			sourceRef="SAP_0000000221" targetRef="SAP_0000000222" />
+		<task id="SAP_0000000244"
+			name="Record Activity 200 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000222.SAP_0000000244"
+			name="$SAP:_WI_RESULT = 'Continue Processing / Data&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Modified Manually'"
+			sourceRef="SAP_0000000222" targetRef="SAP_0000000244" />
+		<task id="SAP_0000000250"
+			name="Set Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000244.SAP_0000000250" name=""
+			sourceRef="SAP_0000000244" targetRef="SAP_0000000250" />
+		<sequenceFlow id="1_SAP_0000000250.end.SAP_0000000222"
+			name="" sourceRef="SAP_0000000250" targetRef="end.SAP_0000000222" />
+		<task id="SAP_0000000230"
+			name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000222.SAP_0000000230"
+			name="$SAP:_WI_RESULT = 'Reject Notification / Cancel&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Processing'"
+			sourceRef="SAP_0000000222" targetRef="SAP_0000000230" />
+		<task id="SAP_0000000236"
+			name="Set Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000230.SAP_0000000236" name=""
+			sourceRef="SAP_0000000230" targetRef="SAP_0000000236" />
+		<sequenceFlow id="2_SAP_0000000236.end.SAP_0000000222"
+			name="" sourceRef="SAP_0000000236" targetRef="end.SAP_0000000222" />
+		<task id="SAP_0000000452"
+			name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000222.SAP_0000000452" name="Exception code: SAP:8991"
+			sourceRef="SAP_0000000222" targetRef="SAP_0000000452" />
+		<task id="SAP_0000000457"
+			name="Set Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000452.SAP_0000000457" name=""
+			sourceRef="SAP_0000000452" targetRef="SAP_0000000457" />
+		<sequenceFlow id="3_SAP_0000000457.end.SAP_0000000222"
+			name="" sourceRef="SAP_0000000457" targetRef="end.SAP_0000000222" />
+		<inclusiveGateway id="end.SAP_0000000222" name="SWITCH" />
+		<sequenceFlow id="9_end.SAP_0000000222.end.SAP_0000000043"
+			name="" sourceRef="end.SAP_0000000222" targetRef="end.SAP_0000000043" />
+		<task id="SAP_0000000174"
+			name="Set Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000043.SAP_0000000174"
+			name="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'9'"
+			sourceRef="SAP_0000000043" targetRef="SAP_0000000174" />
+		<sequenceFlow id="10_SAP_0000000174.end.SAP_0000000043"
+			name="" sourceRef="SAP_0000000174" targetRef="end.SAP_0000000043" />
+		<task id="SAP_0000000186" name="Error During Check &amp; for Switch Document &amp; " />
+		<sequenceFlow id="1_SAP_0000000043.SAP_0000000186" name=""
+			sourceRef="SAP_0000000043" targetRef="SAP_0000000186" />
+		<exclusiveGateway id="SAP_0000000187" name="SWITCH: XOR" />
+		<sequenceFlow id="2_SAP_0000000186.SAP_0000000187" name=""
+			sourceRef="SAP_0000000186" targetRef="SAP_0000000187" />
+		<task id="SAP_0000000195"
+			name="Record Activity 200 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000187.SAP_0000000195"
+			name="$SAP:_WI_RESULT = 'Continue Processing / Data&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Modified Manually'"
+			sourceRef="SAP_0000000187" targetRef="SAP_0000000195" />
+		<task id="SAP_0000000201"
+			name="Set Status of Message to 014 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000195.SAP_0000000201" name=""
+			sourceRef="SAP_0000000195" targetRef="SAP_0000000201" />
+		<sequenceFlow id="1_SAP_0000000201.end.SAP_0000000187"
+			name="" sourceRef="SAP_0000000201" targetRef="end.SAP_0000000187" />
+		<task id="SAP_0000000207"
+			name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000187.SAP_0000000207"
+			name="$SAP:_WI_RESULT = 'Reject Notification / Cancel&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Processing'"
+			sourceRef="SAP_0000000187" targetRef="SAP_0000000207" />
+		<task id="SAP_0000000213"
+			name="Set Status of Message to 012 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000207.SAP_0000000213" name=""
+			sourceRef="SAP_0000000207" targetRef="SAP_0000000213" />
+		<sequenceFlow id="2_SAP_0000000213.end.SAP_0000000187"
+			name="" sourceRef="SAP_0000000213" targetRef="end.SAP_0000000187" />
+		<task id="SAP_0000000433"
+			name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="1_SAP_0000000187.SAP_0000000433" name="Exception code: SAP:8991"
+			sourceRef="SAP_0000000187" targetRef="SAP_0000000433" />
+		<task id="SAP_0000000438"
+			name="Set Status of Message to 012 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+		<sequenceFlow id="2_SAP_0000000433.SAP_0000000438" name=""
+			sourceRef="SAP_0000000433" targetRef="SAP_0000000438" />
+		<sequenceFlow id="3_SAP_0000000438.end.SAP_0000000187"
+			name="" sourceRef="SAP_0000000438" targetRef="end.SAP_0000000187" />
+		<inclusiveGateway id="end.SAP_0000000187" name="SWITCH" />
+		<sequenceFlow id="11_end.SAP_0000000187.end.SAP_0000000043"
+			name="" sourceRef="end.SAP_0000000187" targetRef="end.SAP_0000000043" />
+		<inclusiveGateway id="end.SAP_0000000043" name="SWITCH" />
+		<exclusiveGateway id="SAP_0000000317"
+			name="SWITCH: Notification Rejected or Canceled?" />
+		<sequenceFlow id="9_end.SAP_0000000043.SAP_0000000317"
+			name="" sourceRef="end.SAP_0000000043" targetRef="SAP_0000000317" />
+		<exclusiveGateway id="SAP_0000000327" name="SWITCH: Notification Type?" />
+		<sequenceFlow id="1_SAP_0000000317.SAP_0000000327"
+			name="$tns:DOCUMENTSTATUS = '12' or&#10;&#9;&#9;&#9;&#9;&#9;&#9;$tns:DOCUMENTSTATUS = '6'"
+			sourceRef="SAP_0000000317" targetRef="SAP_0000000327" />
+		<task id="SAP_0000000338" name="Event: Registration Rejected" />
+		<sequenceFlow id="1_SAP_0000000327.SAP_0000000338"
+			name="$tns:MSGDATA/EIDESWTMSGDATA-CATEGORY = 'E01' " sourceRef="SAP_0000000327"
+			targetRef="SAP_0000000338" />
+		<sequenceFlow id="1_SAP_0000000338.end.SAP_0000000327"
+			name="" sourceRef="SAP_0000000338" targetRef="end.SAP_0000000327" />
+		<task id="SAP_0000000336" name="Event: Termination Rejected" />
+		<sequenceFlow id="1_SAP_0000000327.SAP_0000000336" name=""
+			sourceRef="SAP_0000000327" targetRef="SAP_0000000336" />
+		<sequenceFlow id="2_SAP_0000000336.end.SAP_0000000327"
+			name="" sourceRef="SAP_0000000336" targetRef="end.SAP_0000000327" />
+		<inclusiveGateway id="end.SAP_0000000327" name="SWITCH" />
+		<sequenceFlow id="1_end.SAP_0000000327.end.SAP_0000000317"
+			name="" sourceRef="end.SAP_0000000327" targetRef="end.SAP_0000000317" />
+		<sequenceFlow id="2_SAP_0000000317.end.SAP_0000000317"
+			name="" sourceRef="SAP_0000000317" targetRef="end.SAP_0000000317" />
+		<inclusiveGateway id="end.SAP_0000000317" name="SWITCH" />
+		<exclusiveGateway id="SAP_0000000340"
+			name="SWITCH: Error Occurred During Check?" />
+		<sequenceFlow id="12_end.SAP_0000000317.SAP_0000000340"
+			name="" sourceRef="end.SAP_0000000317" targetRef="SAP_0000000340" />
+		<exclusiveGateway id="SAP_0000000366"
+			name="SWITCH: Does Notification Object Exist?" />
+		<sequenceFlow id="1_SAP_0000000340.SAP_0000000366"
+			name="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING !=&#10;&#9;&#9;&#9;&#9;&#9;&#9;'0' and $tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING&#10;&#9;&#9;&#9;&#9;&#9;&#9;!= '9' and&#10;&#9;&#9;&#9;&#9;&#9;&#9;$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING != '3'&#10;&#9;&#9;&#9;&#9;&#9;&#9;and $tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING !=&#10;&#9;&#9;&#9;&#9;&#9;&#9;'6'"
+			sourceRef="SAP_0000000340" targetRef="SAP_0000000366" />
+		<task id="SAP_0000000350" name="Delete Notification Object" />
+		<sequenceFlow id="1_SAP_0000000366.SAP_0000000350" name="$tns:ERRORLOG != ''"
+			sourceRef="SAP_0000000366" targetRef="SAP_0000000350" />
+		<sequenceFlow id="1_SAP_0000000350.end.SAP_0000000366"
+			name="" sourceRef="SAP_0000000350" targetRef="end.SAP_0000000366" />
+		<sequenceFlow id="2_SAP_0000000366.end.SAP_0000000366"
+			name="" sourceRef="SAP_0000000366" targetRef="end.SAP_0000000366" />
+		<inclusiveGateway id="end.SAP_0000000366" name="SWITCH" />
+		<sequenceFlow id="1_end.SAP_0000000366.end.SAP_0000000340"
+			name="" sourceRef="end.SAP_0000000366" targetRef="end.SAP_0000000340" />
+		<sequenceFlow id="2_SAP_0000000340.end.SAP_0000000340"
+			name="" sourceRef="SAP_0000000340" targetRef="end.SAP_0000000340" />
+		<inclusiveGateway id="end.SAP_0000000340" name="SWITCH" />
+		<endEvent name="End" id="end_of_process" />
+		<sequenceFlow id="15_end.SAP_0000000340.end_of_process"
+			name="" sourceRef="end.SAP_0000000340" targetRef="end_of_process" />
+	</process>
+	<bpmndi:BPMNDiagram id="BPMNDiagram_col.ISUSuSwCheck">
+		<bpmndi:BPMNPlane id="BPMNPlane_col.ISUSuSwCheck"
+			bpmnElement="col.ISUSuSwCheck">
+			<bpmndi:BPMNShape bpmnElement="part.ISUSuSwCheck"
+				id="BPMNShape_part.ISUSuSwCheck">
+				<omgdc:Bounds height="1920" width="5250" x="40" y="80" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="Background" id="lane:Background">
+				<omgdc:Bounds height="1920" width="5200" x="90" y="80" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="start_of_process" id="startEventStart">
+				<omgdc:Bounds height="40" width="40" x="340" y="110" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000004" id="taskPerform Check">
+				<omgdc:Bounds height="80" width="100" x="540"
+					y="122.00000000000001" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000027"
+				id="exclusiveGatewaySWITCH: Error Occurred During Check?">
+				<omgdc:Bounds height="50" width="50" x="740" y="134" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000354"
+				id="exclusiveGatewaySWITCH: Error Message Known?">
+				<omgdc:Bounds height="50" width="50" x="940" y="146" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000037"
+				id="taskCreate Notification Object">
+				<omgdc:Bounds height="80" width="100" x="1140" y="158" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.SAP_0000000354"
+				id="inclusiveGatewaySWITCH">
+				<omgdc:Bounds height="50" width="50" x="1340" y="170" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.SAP_0000000027"
+				id="inclusiveGatewaySWITCH">
+				<omgdc:Bounds height="50" width="50" x="1540" y="182" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000043"
+				id="exclusiveGatewaySWITCH: Result of Check">
+				<omgdc:Bounds height="50" width="50" x="1740" y="194" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000180"
+				id="taskStatus of Message Set to 014">
+				<omgdc:Bounds height="80" width="100" x="1940"
+					y="205.99999999999997" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000086"
+				id="taskTemporary Error During Check &amp; for Switch&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Document &amp;">
+				<omgdc:Bounds height="80" width="100" x="1960" y="326" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000087"
+				id="exclusiveGatewaySWITCH: XOR">
+				<omgdc:Bounds height="50" width="50" x="2140" y="218" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000095"
+				id="taskRecord Activity 200 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2340" y="110" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000101"
+				id="taskSet Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2540"
+					y="122.00000000000001" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000109"
+				id="taskRecord Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2360" y="230" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000115"
+				id="taskSet Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2560" y="242" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000385"
+				id="taskRecord Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2380" y="350" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000390"
+				id="taskSet Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2580" y="362" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.SAP_0000000087"
+				id="inclusiveGatewaySWITCH">
+				<omgdc:Bounds height="50" width="50" x="2740" y="134" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000311"
+				id="taskSet Status of Message to 006 (Terminated)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="1979.9999999999998"
+					y="446" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000374"
+				id="taskStart Agent Information Asynchronously&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2000.0000000000002"
+					y="566" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000133"
+				id="taskSet Status of Message to 006 (Terminated)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2160" y="338" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000276"
+				id="taskError During Check &amp; for Switch Document &amp; ">
+				<omgdc:Bounds height="80" width="100" x="2020" y="686" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000277"
+				id="exclusiveGatewaySWITCH: XOR">
+				<omgdc:Bounds height="50" width="50" x="2180"
+					y="458.00000000000006" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000297"
+				id="taskRecord Activity 200 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2400" y="470" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000303"
+				id="taskSet Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2600" y="482" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000285"
+				id="taskRecord Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2420" y="590" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000291"
+				id="taskSet Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2620" y="602" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000471"
+				id="taskRecord Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2440" y="710" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000476"
+				id="taskSet Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2640" y="722" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.SAP_0000000277"
+				id="inclusiveGatewaySWITCH">
+				<omgdc:Bounds height="50" width="50" x="2760"
+					y="254.00000000000003" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000080"
+				id="taskSet Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2040" y="806" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000377"
+				id="taskStart Agent Information Asynchronously&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2060" y="926" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000270"
+				id="taskSet Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2200" y="578" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000139"
+				id="taskWarning Triggered in Check &amp; for Switch&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Document">
+				<omgdc:Bounds height="80" width="100" x="2080" y="1046" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000140"
+				id="exclusiveGatewaySWITCH: XOR">
+				<omgdc:Bounds height="50" width="50" x="2220" y="698" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000154"
+				id="taskRecord Activity 200 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2460" y="830" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000160"
+				id="taskSet Status of Message to 014 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2660" y="842" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000148"
+				id="taskRecord Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2480" y="950" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000166"
+				id="taskMessage Status Set to 012">
+				<omgdc:Bounds height="80" width="100" x="2680" y="962" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000413"
+				id="taskRecord Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2500" y="1070" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000418"
+				id="taskMessage Status Set to 012">
+				<omgdc:Bounds height="80" width="100" x="2700" y="1082" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.SAP_0000000140"
+				id="inclusiveGatewaySWITCH">
+				<omgdc:Bounds height="50" width="50" x="2780" y="374" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000221"
+				id="taskUnexpected Exception for Check &amp; for Switch&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Document &amp;">
+				<omgdc:Bounds height="80" width="100" x="2100" y="1166" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000222"
+				id="exclusiveGatewaySWITCH: XOR">
+				<omgdc:Bounds height="50" width="50" x="2240" y="818" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000244"
+				id="taskRecord Activity 200 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2520" y="1190" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000250"
+				id="taskSet Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2720" y="1202" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000230"
+				id="taskRecord Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2340" y="1310" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000236"
+				id="taskSet Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2540" y="1322" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000452"
+				id="taskRecord Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2360" y="1430" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000457"
+				id="taskSet Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2560" y="1442" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.SAP_0000000222"
+				id="inclusiveGatewaySWITCH">
+				<omgdc:Bounds height="50" width="50" x="2800" y="494" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000174"
+				id="taskSet Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2120" y="1286" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000186"
+				id="taskError During Check &amp; for Switch Document &amp; ">
+				<omgdc:Bounds height="80" width="100" x="1940" y="1406" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000187"
+				id="exclusiveGatewaySWITCH: XOR">
+				<omgdc:Bounds height="50" width="50" x="2260" y="938" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000195"
+				id="taskRecord Activity 200 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2380" y="1550" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000201"
+				id="taskSet Status of Message to 014 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2580" y="1562" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000207"
+				id="taskRecord Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2400" y="1670" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000213"
+				id="taskSet Status of Message to 012 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2600" y="1682" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000433"
+				id="taskRecord Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2420" y="1790" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000438"
+				id="taskSet Status of Message to 012 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;">
+				<omgdc:Bounds height="80" width="100" x="2620" y="1802" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.SAP_0000000187"
+				id="inclusiveGatewaySWITCH">
+				<omgdc:Bounds height="50" width="50" x="2820" y="614" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.SAP_0000000043"
+				id="inclusiveGatewaySWITCH">
+				<omgdc:Bounds height="50" width="50" x="2940" y="146" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000317"
+				id="exclusiveGatewaySWITCH: Notification Rejected or Canceled?">
+				<omgdc:Bounds height="50" width="50" x="3140" y="158" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000327"
+				id="exclusiveGatewaySWITCH: Notification Type?">
+				<omgdc:Bounds height="50" width="50" x="3340" y="170" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000338"
+				id="taskEvent: Registration Rejected">
+				<omgdc:Bounds height="80" width="100" x="3540" y="182" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000336"
+				id="taskEvent: Termination Rejected">
+				<omgdc:Bounds height="80" width="100" x="3560.0000000000005"
+					y="302" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.SAP_0000000327"
+				id="inclusiveGatewaySWITCH">
+				<omgdc:Bounds height="50" width="50" x="3740" y="194" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.SAP_0000000317"
+				id="inclusiveGatewaySWITCH">
+				<omgdc:Bounds height="50" width="50" x="3940"
+					y="205.99999999999997" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000340"
+				id="exclusiveGatewaySWITCH: Error Occurred During Check?">
+				<omgdc:Bounds height="50" width="50" x="4140" y="218" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000366"
+				id="exclusiveGatewaySWITCH: Does Notification Object Exist?">
+				<omgdc:Bounds height="50" width="50" x="4340" y="110" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SAP_0000000350"
+				id="taskDelete Notification Object">
+				<omgdc:Bounds height="80" width="100" x="4540"
+					y="122.00000000000001" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.SAP_0000000366"
+				id="inclusiveGatewaySWITCH">
+				<omgdc:Bounds height="50" width="50" x="4740" y="134" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.SAP_0000000340"
+				id="inclusiveGatewaySWITCH">
+				<omgdc:Bounds height="50" width="50" x="4940" y="146" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end_of_process" id="endEventEnd">
+				<omgdc:Bounds height="40" width="40" x="5140" y="158" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNEdge bpmnElement="2_start_of_process.SAP_0000000004"
+				id="edg:2_start_of_process.SAP_0000000004">
+				<omgdi:waypoint x="380" y="130" />
+				<omgdi:waypoint x="540" y="162" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="3_SAP_0000000004.SAP_0000000027"
+				id="edg:3_SAP_0000000004.SAP_0000000027">
+				<omgdi:waypoint x="640" y="162" />
+				<omgdi:waypoint x="740" y="159" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000027.SAP_0000000354"
+				id="edg:1_SAP_0000000027.SAP_0000000354">
+				<omgdi:waypoint x="790" y="159" />
+				<omgdi:waypoint x="940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000354.SAP_0000000037"
+				id="edg:1_SAP_0000000354.SAP_0000000037">
+				<omgdi:waypoint x="990" y="171" />
+				<omgdi:waypoint x="1140" y="198" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000037.end.SAP_0000000354"
+				id="edg:1_SAP_0000000037.end.SAP_0000000354">
+				<omgdi:waypoint x="1240" y="198" />
+				<omgdi:waypoint x="1340" y="195" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000354.end.SAP_0000000354"
+				id="edg:2_SAP_0000000354.end.SAP_0000000354">
+				<omgdi:waypoint x="990" y="171" />
+				<omgdi:waypoint x="1340" y="195" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_end.SAP_0000000354.end.SAP_0000000027"
+				id="edg:1_end.SAP_0000000354.end.SAP_0000000027">
+				<omgdi:waypoint x="1390" y="195" />
+				<omgdi:waypoint x="1540" y="207" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000027.end.SAP_0000000027"
+				id="edg:2_SAP_0000000027.end.SAP_0000000027">
+				<omgdi:waypoint x="790" y="159" />
+				<omgdi:waypoint x="1540" y="207" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="6_end.SAP_0000000027.SAP_0000000043"
+				id="edg:6_end.SAP_0000000027.SAP_0000000043">
+				<omgdi:waypoint x="1590" y="207" />
+				<omgdi:waypoint x="1740" y="219" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000043.SAP_0000000180"
+				id="edg:1_SAP_0000000043.SAP_0000000180">
+				<omgdi:waypoint x="1790" y="219" />
+				<omgdi:waypoint x="1940" y="245.99999999999997" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000180.end.SAP_0000000043"
+				id="edg:1_SAP_0000000180.end.SAP_0000000043">
+				<omgdi:waypoint x="2040" y="245.99999999999997" />
+				<omgdi:waypoint x="2940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000043.SAP_0000000086"
+				id="edg:1_SAP_0000000043.SAP_0000000086">
+				<omgdi:waypoint x="1790" y="219" />
+				<omgdi:waypoint x="1960" y="366" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000086.SAP_0000000087"
+				id="edg:2_SAP_0000000086.SAP_0000000087">
+				<omgdi:waypoint x="2060" y="366" />
+				<omgdi:waypoint x="2140" y="243" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000087.SAP_0000000095"
+				id="edg:1_SAP_0000000087.SAP_0000000095">
+				<omgdi:waypoint x="2190" y="243" />
+				<omgdi:waypoint x="2340" y="150" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000095.SAP_0000000101"
+				id="edg:2_SAP_0000000095.SAP_0000000101">
+				<omgdi:waypoint x="2440" y="150" />
+				<omgdi:waypoint x="2540" y="162" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000101.end.SAP_0000000087"
+				id="edg:1_SAP_0000000101.end.SAP_0000000087">
+				<omgdi:waypoint x="2640" y="162" />
+				<omgdi:waypoint x="2740" y="159" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000087.SAP_0000000109"
+				id="edg:1_SAP_0000000087.SAP_0000000109">
+				<omgdi:waypoint x="2190" y="243" />
+				<omgdi:waypoint x="2360" y="270" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000109.SAP_0000000115"
+				id="edg:2_SAP_0000000109.SAP_0000000115">
+				<omgdi:waypoint x="2460" y="270" />
+				<omgdi:waypoint x="2560" y="282" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000115.end.SAP_0000000087"
+				id="edg:2_SAP_0000000115.end.SAP_0000000087">
+				<omgdi:waypoint x="2660" y="282" />
+				<omgdi:waypoint x="2740" y="159" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000087.SAP_0000000385"
+				id="edg:1_SAP_0000000087.SAP_0000000385">
+				<omgdi:waypoint x="2190" y="243" />
+				<omgdi:waypoint x="2380" y="390" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000385.SAP_0000000390"
+				id="edg:2_SAP_0000000385.SAP_0000000390">
+				<omgdi:waypoint x="2480" y="390" />
+				<omgdi:waypoint x="2580" y="402" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="3_SAP_0000000390.end.SAP_0000000087"
+				id="edg:3_SAP_0000000390.end.SAP_0000000087">
+				<omgdi:waypoint x="2680" y="402" />
+				<omgdi:waypoint x="2740" y="159" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_end.SAP_0000000087.end.SAP_0000000043"
+				id="edg:2_end.SAP_0000000087.end.SAP_0000000043">
+				<omgdi:waypoint x="2790" y="159" />
+				<omgdi:waypoint x="2940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000043.SAP_0000000311"
+				id="edg:1_SAP_0000000043.SAP_0000000311">
+				<omgdi:waypoint x="1790" y="219" />
+				<omgdi:waypoint x="1979.9999999999998" y="486" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="3_SAP_0000000311.end.SAP_0000000043"
+				id="edg:3_SAP_0000000311.end.SAP_0000000043">
+				<omgdi:waypoint x="2080" y="486" />
+				<omgdi:waypoint x="2940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000043.SAP_0000000374"
+				id="edg:1_SAP_0000000043.SAP_0000000374">
+				<omgdi:waypoint x="1790" y="219" />
+				<omgdi:waypoint x="2000.0000000000002" y="606" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000374.SAP_0000000133"
+				id="edg:2_SAP_0000000374.SAP_0000000133">
+				<omgdi:waypoint x="2100" y="606" />
+				<omgdi:waypoint x="2160" y="378" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="4_SAP_0000000133.end.SAP_0000000043"
+				id="edg:4_SAP_0000000133.end.SAP_0000000043">
+				<omgdi:waypoint x="2260" y="378" />
+				<omgdi:waypoint x="2940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000043.SAP_0000000276"
+				id="edg:1_SAP_0000000043.SAP_0000000276">
+				<omgdi:waypoint x="1790" y="219" />
+				<omgdi:waypoint x="2020" y="726" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000276.SAP_0000000277"
+				id="edg:2_SAP_0000000276.SAP_0000000277">
+				<omgdi:waypoint x="2120" y="726" />
+				<omgdi:waypoint x="2180" y="483.00000000000006" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000277.SAP_0000000297"
+				id="edg:1_SAP_0000000277.SAP_0000000297">
+				<omgdi:waypoint x="2230" y="483.00000000000006" />
+				<omgdi:waypoint x="2400" y="510" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000297.SAP_0000000303"
+				id="edg:2_SAP_0000000297.SAP_0000000303">
+				<omgdi:waypoint x="2500" y="510" />
+				<omgdi:waypoint x="2600" y="522" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000303.end.SAP_0000000277"
+				id="edg:1_SAP_0000000303.end.SAP_0000000277">
+				<omgdi:waypoint x="2700" y="522" />
+				<omgdi:waypoint x="2760" y="279" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000277.SAP_0000000285"
+				id="edg:1_SAP_0000000277.SAP_0000000285">
+				<omgdi:waypoint x="2230" y="483.00000000000006" />
+				<omgdi:waypoint x="2420" y="630" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000285.SAP_0000000291"
+				id="edg:2_SAP_0000000285.SAP_0000000291">
+				<omgdi:waypoint x="2520" y="630" />
+				<omgdi:waypoint x="2620" y="642" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000291.end.SAP_0000000277"
+				id="edg:2_SAP_0000000291.end.SAP_0000000277">
+				<omgdi:waypoint x="2720" y="642" />
+				<omgdi:waypoint x="2760" y="279" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000277.SAP_0000000471"
+				id="edg:1_SAP_0000000277.SAP_0000000471">
+				<omgdi:waypoint x="2230" y="483.00000000000006" />
+				<omgdi:waypoint x="2440" y="750" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000471.SAP_0000000476"
+				id="edg:2_SAP_0000000471.SAP_0000000476">
+				<omgdi:waypoint x="2540" y="750" />
+				<omgdi:waypoint x="2640" y="762" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="3_SAP_0000000476.end.SAP_0000000277"
+				id="edg:3_SAP_0000000476.end.SAP_0000000277">
+				<omgdi:waypoint x="2740" y="762" />
+				<omgdi:waypoint x="2760" y="279" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="5_end.SAP_0000000277.end.SAP_0000000043"
+				id="edg:5_end.SAP_0000000277.end.SAP_0000000043">
+				<omgdi:waypoint x="2810" y="279" />
+				<omgdi:waypoint x="2940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000043.SAP_0000000080"
+				id="edg:1_SAP_0000000043.SAP_0000000080">
+				<omgdi:waypoint x="1790" y="219" />
+				<omgdi:waypoint x="2040" y="846" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="6_SAP_0000000080.end.SAP_0000000043"
+				id="edg:6_SAP_0000000080.end.SAP_0000000043">
+				<omgdi:waypoint x="2140" y="846" />
+				<omgdi:waypoint x="2940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000043.SAP_0000000377"
+				id="edg:1_SAP_0000000043.SAP_0000000377">
+				<omgdi:waypoint x="1790" y="219" />
+				<omgdi:waypoint x="2060" y="966" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000377.SAP_0000000270"
+				id="edg:2_SAP_0000000377.SAP_0000000270">
+				<omgdi:waypoint x="2160" y="966" />
+				<omgdi:waypoint x="2200" y="618" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="7_SAP_0000000270.end.SAP_0000000043"
+				id="edg:7_SAP_0000000270.end.SAP_0000000043">
+				<omgdi:waypoint x="2300" y="618" />
+				<omgdi:waypoint x="2940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000043.SAP_0000000139"
+				id="edg:1_SAP_0000000043.SAP_0000000139">
+				<omgdi:waypoint x="1790" y="219" />
+				<omgdi:waypoint x="2080" y="1086" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000139.SAP_0000000140"
+				id="edg:2_SAP_0000000139.SAP_0000000140">
+				<omgdi:waypoint x="2180" y="1086" />
+				<omgdi:waypoint x="2220" y="723" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000140.SAP_0000000154"
+				id="edg:1_SAP_0000000140.SAP_0000000154">
+				<omgdi:waypoint x="2270" y="723" />
+				<omgdi:waypoint x="2460" y="870" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000154.SAP_0000000160"
+				id="edg:2_SAP_0000000154.SAP_0000000160">
+				<omgdi:waypoint x="2560" y="870" />
+				<omgdi:waypoint x="2660" y="882" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000160.end.SAP_0000000140"
+				id="edg:1_SAP_0000000160.end.SAP_0000000140">
+				<omgdi:waypoint x="2760" y="882" />
+				<omgdi:waypoint x="2780" y="399" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000140.SAP_0000000148"
+				id="edg:1_SAP_0000000140.SAP_0000000148">
+				<omgdi:waypoint x="2270" y="723" />
+				<omgdi:waypoint x="2480" y="990" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000148.SAP_0000000166"
+				id="edg:2_SAP_0000000148.SAP_0000000166">
+				<omgdi:waypoint x="2580" y="990" />
+				<omgdi:waypoint x="2680" y="1002" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000166.end.SAP_0000000140"
+				id="edg:2_SAP_0000000166.end.SAP_0000000140">
+				<omgdi:waypoint x="2780" y="1002" />
+				<omgdi:waypoint x="2780" y="399" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000140.SAP_0000000413"
+				id="edg:1_SAP_0000000140.SAP_0000000413">
+				<omgdi:waypoint x="2270" y="723" />
+				<omgdi:waypoint x="2500" y="1110" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000413.SAP_0000000418"
+				id="edg:2_SAP_0000000413.SAP_0000000418">
+				<omgdi:waypoint x="2600" y="1110" />
+				<omgdi:waypoint x="2700" y="1122" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="3_SAP_0000000418.end.SAP_0000000140"
+				id="edg:3_SAP_0000000418.end.SAP_0000000140">
+				<omgdi:waypoint x="2800" y="1122" />
+				<omgdi:waypoint x="2780" y="399" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="8_end.SAP_0000000140.end.SAP_0000000043"
+				id="edg:8_end.SAP_0000000140.end.SAP_0000000043">
+				<omgdi:waypoint x="2830" y="399" />
+				<omgdi:waypoint x="2940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000043.SAP_0000000221"
+				id="edg:1_SAP_0000000043.SAP_0000000221">
+				<omgdi:waypoint x="1790" y="219" />
+				<omgdi:waypoint x="2100" y="1206" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000221.SAP_0000000222"
+				id="edg:2_SAP_0000000221.SAP_0000000222">
+				<omgdi:waypoint x="2200" y="1206" />
+				<omgdi:waypoint x="2240" y="843" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000222.SAP_0000000244"
+				id="edg:1_SAP_0000000222.SAP_0000000244">
+				<omgdi:waypoint x="2290" y="843" />
+				<omgdi:waypoint x="2520" y="1230" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000244.SAP_0000000250"
+				id="edg:2_SAP_0000000244.SAP_0000000250">
+				<omgdi:waypoint x="2620" y="1230" />
+				<omgdi:waypoint x="2720" y="1242" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000250.end.SAP_0000000222"
+				id="edg:1_SAP_0000000250.end.SAP_0000000222">
+				<omgdi:waypoint x="2820" y="1242" />
+				<omgdi:waypoint x="2800" y="519" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000222.SAP_0000000230"
+				id="edg:1_SAP_0000000222.SAP_0000000230">
+				<omgdi:waypoint x="2290" y="843" />
+				<omgdi:waypoint x="2340" y="1350" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000230.SAP_0000000236"
+				id="edg:2_SAP_0000000230.SAP_0000000236">
+				<omgdi:waypoint x="2440" y="1350" />
+				<omgdi:waypoint x="2540" y="1362" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000236.end.SAP_0000000222"
+				id="edg:2_SAP_0000000236.end.SAP_0000000222">
+				<omgdi:waypoint x="2640" y="1362" />
+				<omgdi:waypoint x="2800" y="519" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000222.SAP_0000000452"
+				id="edg:1_SAP_0000000222.SAP_0000000452">
+				<omgdi:waypoint x="2290" y="843" />
+				<omgdi:waypoint x="2360" y="1470" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000452.SAP_0000000457"
+				id="edg:2_SAP_0000000452.SAP_0000000457">
+				<omgdi:waypoint x="2460" y="1470" />
+				<omgdi:waypoint x="2560" y="1482" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="3_SAP_0000000457.end.SAP_0000000222"
+				id="edg:3_SAP_0000000457.end.SAP_0000000222">
+				<omgdi:waypoint x="2660" y="1482" />
+				<omgdi:waypoint x="2800" y="519" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="9_end.SAP_0000000222.end.SAP_0000000043"
+				id="edg:9_end.SAP_0000000222.end.SAP_0000000043">
+				<omgdi:waypoint x="2850" y="519" />
+				<omgdi:waypoint x="2940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000043.SAP_0000000174"
+				id="edg:1_SAP_0000000043.SAP_0000000174">
+				<omgdi:waypoint x="1790" y="219" />
+				<omgdi:waypoint x="2120" y="1326" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="10_SAP_0000000174.end.SAP_0000000043"
+				id="edg:10_SAP_0000000174.end.SAP_0000000043">
+				<omgdi:waypoint x="2220" y="1326" />
+				<omgdi:waypoint x="2940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000043.SAP_0000000186"
+				id="edg:1_SAP_0000000043.SAP_0000000186">
+				<omgdi:waypoint x="1790" y="219" />
+				<omgdi:waypoint x="1940" y="1446" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000186.SAP_0000000187"
+				id="edg:2_SAP_0000000186.SAP_0000000187">
+				<omgdi:waypoint x="2040" y="1446" />
+				<omgdi:waypoint x="2260" y="963" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000187.SAP_0000000195"
+				id="edg:1_SAP_0000000187.SAP_0000000195">
+				<omgdi:waypoint x="2310" y="963" />
+				<omgdi:waypoint x="2380" y="1590" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000195.SAP_0000000201"
+				id="edg:2_SAP_0000000195.SAP_0000000201">
+				<omgdi:waypoint x="2480" y="1590" />
+				<omgdi:waypoint x="2580" y="1602" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000201.end.SAP_0000000187"
+				id="edg:1_SAP_0000000201.end.SAP_0000000187">
+				<omgdi:waypoint x="2680" y="1602" />
+				<omgdi:waypoint x="2820" y="639" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000187.SAP_0000000207"
+				id="edg:1_SAP_0000000187.SAP_0000000207">
+				<omgdi:waypoint x="2310" y="963" />
+				<omgdi:waypoint x="2400" y="1710" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000207.SAP_0000000213"
+				id="edg:2_SAP_0000000207.SAP_0000000213">
+				<omgdi:waypoint x="2500" y="1710" />
+				<omgdi:waypoint x="2600" y="1722" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000213.end.SAP_0000000187"
+				id="edg:2_SAP_0000000213.end.SAP_0000000187">
+				<omgdi:waypoint x="2700" y="1722" />
+				<omgdi:waypoint x="2820" y="639" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000187.SAP_0000000433"
+				id="edg:1_SAP_0000000187.SAP_0000000433">
+				<omgdi:waypoint x="2310" y="963" />
+				<omgdi:waypoint x="2420" y="1830" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000433.SAP_0000000438"
+				id="edg:2_SAP_0000000433.SAP_0000000438">
+				<omgdi:waypoint x="2520" y="1830" />
+				<omgdi:waypoint x="2620" y="1842" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="3_SAP_0000000438.end.SAP_0000000187"
+				id="edg:3_SAP_0000000438.end.SAP_0000000187">
+				<omgdi:waypoint x="2720" y="1842" />
+				<omgdi:waypoint x="2820" y="639" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="11_end.SAP_0000000187.end.SAP_0000000043"
+				id="edg:11_end.SAP_0000000187.end.SAP_0000000043">
+				<omgdi:waypoint x="2870" y="639" />
+				<omgdi:waypoint x="2940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="9_end.SAP_0000000043.SAP_0000000317"
+				id="edg:9_end.SAP_0000000043.SAP_0000000317">
+				<omgdi:waypoint x="2990" y="171" />
+				<omgdi:waypoint x="3140" y="183" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000317.SAP_0000000327"
+				id="edg:1_SAP_0000000317.SAP_0000000327">
+				<omgdi:waypoint x="3190" y="183" />
+				<omgdi:waypoint x="3340" y="195" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000327.SAP_0000000338"
+				id="edg:1_SAP_0000000327.SAP_0000000338">
+				<omgdi:waypoint x="3390" y="195" />
+				<omgdi:waypoint x="3540" y="222" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000338.end.SAP_0000000327"
+				id="edg:1_SAP_0000000338.end.SAP_0000000327">
+				<omgdi:waypoint x="3640" y="222" />
+				<omgdi:waypoint x="3740" y="219" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000327.SAP_0000000336"
+				id="edg:1_SAP_0000000327.SAP_0000000336">
+				<omgdi:waypoint x="3390" y="195" />
+				<omgdi:waypoint x="3560.0000000000005" y="342" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000336.end.SAP_0000000327"
+				id="edg:2_SAP_0000000336.end.SAP_0000000327">
+				<omgdi:waypoint x="3660.0000000000005" y="342" />
+				<omgdi:waypoint x="3740" y="219" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_end.SAP_0000000327.end.SAP_0000000317"
+				id="edg:1_end.SAP_0000000327.end.SAP_0000000317">
+				<omgdi:waypoint x="3790" y="219" />
+				<omgdi:waypoint x="3940" y="230.99999999999997" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000317.end.SAP_0000000317"
+				id="edg:2_SAP_0000000317.end.SAP_0000000317">
+				<omgdi:waypoint x="3190" y="183" />
+				<omgdi:waypoint x="3940" y="230.99999999999997" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="12_end.SAP_0000000317.SAP_0000000340"
+				id="edg:12_end.SAP_0000000317.SAP_0000000340">
+				<omgdi:waypoint x="3990" y="230.99999999999997" />
+				<omgdi:waypoint x="4140" y="243" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000340.SAP_0000000366"
+				id="edg:1_SAP_0000000340.SAP_0000000366">
+				<omgdi:waypoint x="4190" y="243" />
+				<omgdi:waypoint x="4340" y="135" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000366.SAP_0000000350"
+				id="edg:1_SAP_0000000366.SAP_0000000350">
+				<omgdi:waypoint x="4390" y="135" />
+				<omgdi:waypoint x="4540" y="162" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SAP_0000000350.end.SAP_0000000366"
+				id="edg:1_SAP_0000000350.end.SAP_0000000366">
+				<omgdi:waypoint x="4640" y="162" />
+				<omgdi:waypoint x="4740" y="159" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000366.end.SAP_0000000366"
+				id="edg:2_SAP_0000000366.end.SAP_0000000366">
+				<omgdi:waypoint x="4390" y="135" />
+				<omgdi:waypoint x="4740" y="159" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_end.SAP_0000000366.end.SAP_0000000340"
+				id="edg:1_end.SAP_0000000366.end.SAP_0000000340">
+				<omgdi:waypoint x="4790" y="159" />
+				<omgdi:waypoint x="4940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_SAP_0000000340.end.SAP_0000000340"
+				id="edg:2_SAP_0000000340.end.SAP_0000000340">
+				<omgdi:waypoint x="4190" y="243" />
+				<omgdi:waypoint x="4940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="15_end.SAP_0000000340.end_of_process"
+				id="edg:15_end.SAP_0000000340.end_of_process">
+				<omgdi:waypoint x="4990" y="171" />
+				<omgdi:waypoint x="5140" y="178" />
+			</bpmndi:BPMNEdge>
+		</bpmndi:BPMNPlane>
+	</bpmndi:BPMNDiagram>
+</definitions>

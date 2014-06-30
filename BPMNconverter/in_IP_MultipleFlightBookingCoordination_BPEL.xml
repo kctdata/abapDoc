@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process name="MultipleFlightBookingCoordination"
+	xsi:schemalocation="BPEL4WS.xsd" targetNamespace="http://sap.com/xi/XI/Demo/Agency"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+	xmlns:tns="http://sap.com/xi/XI/Demo/Agency" xmlns:sapxi="http://www.sap.com/xi/">
+	<sap-extn:annotation xmlns:sap-extn="http://www.sap.com/xi/extensions">
+		<sap-extn:processCategory>process</sap-extn:processCategory>
+	</sap-extn:annotation>
+
+	<partnerLinks>
+		<partnerLink name="Transform_Link" partnerLinkType="sapxi:Transform_LT"
+			partnerRole="Transform_Role" />
+	</partnerLinks>
+	<variables>
+		<variable name="BookingOrderList"
+			messageType="http://sap.com/xi/XI/Demo/Airline:FlightBookingOrderRequest"
+			sap-extn:multiline="true" xmlns:sap-extn="http://www.sap.com/xi/extensions" />
+		<variable name="BookingOrderList_headerline"
+			messageType="http://sap.com/xi/XI/Demo/Airline:FlightBookingOrderRequest" />
+		<variable name="ConfCount" type="xsd:integer" />
+		<variable name="ConfirmedList"
+			messageType="http://sap.com/xi/XI/Demo/Airline:FlightBookingOrderConfirmation"
+			sap-extn:multiline="true" xmlns:sap-extn="http://www.sap.com/xi/extensions" />
+		<variable name="ConfirmedList_headerline"
+			messageType="http://sap.com/xi/XI/Demo/Airline:FlightBookingOrderConfirmation" />
+		<variable name="FailureNotification"
+			messageType="http://sap.com/xi/XI/Demo/Agency:MultipleBookingOrderConfirmation" />
+		<variable name="MsgCount" type="xsd:integer" />
+		<variable name="MultipleBooking"
+			messageType="http://sap.com/xi/XI/Demo/Agency:MultipleBookingOrderRequest" />
+		<variable name="MultipleConfirmation"
+			messageType="http://sap.com/xi/XI/Demo/Agency:MultipleBookingOrderConfirmation" />
+		<variable name="Transform_packedInMsg" messageType="sapxi:inTransformMsg" />
+		<variable name="Transform_packedOutMsg" messageType="sapxi:outTransformMsg" />
+	</variables>
+	<sequence>
+		<receive name="ReceiveMultipleBooking" sap-extn:mode="async"
+			variable="MultipleBooking" createInstance="yes"
+			xmlns:sap-extn="http://www.sap.com/xi/extensions" />
+		<sequence sap-extn:stepType="TRANSFORM" sap-extn:stepName="SplitMultipleBookingOrder"
+			sap-extn:mapProgram="http://sap.com/xi/XI/Demo/Agency:SplitMultipleBookingOrder_BPM"
+			xmlns:sap-extn="http://www.sap.com/xi/extensions">
+			<assign name="packMsg#1">
+				<copy>
+					<from
+						expression="sap-extn:packMsgInTransformParam(&apos;Transform_packedInMsg&apos;, &apos;inMsg&apos; , &apos;MultipleBooking&apos;, &apos;MultipleBookingOrderRequest_Abstract&apos;, &apos;http://sap.com/xi/XI/Demo/Agency&apos;, &apos;&apos;, &apos;MultipleBookingOrderRequest&apos;)" />
+					<to variable="Transform_packedInMsg" />
+				</copy>
+			</assign>
+			<invoke partnerLink="Transform_Link" portType="sapxi:Transform_PT"
+				operation="TransformOp" inputVariable="Transform_packedInMsg"
+				outputVariable="Transform_packedOutMsg" />
+			<assign name="unpackMsg#1">
+				<copy>
+					<from
+						expression="sap-extn:unpackMsgOutofTransformParam(&apos;Transform_packedOutMsg&apos;, &apos;outMsg&apos; , &apos;FlightBookingOrderRequest_Abstract&apos;, &apos;http://sap.com/xi/XI/Demo/Agency&apos;, &apos;FlightBookingOrderRequest&apos;)" />
+					<to variable="BookingOrderList_headerline" />
+				</copy>
+			</assign>
+			<assign>
+				<sap-extn:copy>
+					<sap-extn:from sap-extn:variable="BookingOrderList" />
+					<sap-extn:to sap-extn:variable="BookingOrderList_headerline" />
+				</sap-extn:copy>
+			</assign>
+		</sequence>
+		<sap-extn:parforeach name="SendParallel" select="BookingOrderList"
+			variable="BookingOrder" xmlns:sap-extn="http://www.sap.com/xi/extensions">
+			<variables>
+				<variable name="AirlineResponse"
+					messageType="http://sap.com/xi/XI/Demo/Airline:FlightBookingOrderConfirmation" />
+				<variable name="BookingOrder"
+					messageType="http://sap.com/xi/XI/Demo/Airline:FlightBookingOrderRequest" />
+				<variable name="BookingStatus" type="xsd:string" />
+			</variables>
+			<correlationSets>
+				<correlationSet name="BookingConfirmation"
+					properties="tns:BookingConfirmation|AGENCYID|6156dbb00f8c11d89b81c1610a140f46 tns:BookingConfirmation|AGENCYID|66a866600f8c11d8c979c1610a140f46 tns:BookingConfirmation|ITEMNUMBER|6156dbb00f8c11d89b81c1610a140f46 tns:BookingConfirmation|ITEMNUMBER|66a866600f8c11d8c979c1610a140f46 tns:BookingConfirmation|ORDERNUMBER|6156dbb00f8c11d89b81c1610a140f46 tns:BookingConfirmation|ORDERNUMBER|66a866600f8c11d8c979c1610a140f46 " />
+			</correlationSets>
+			<sequence>
+				<invoke name="Send single booking to airline"
+					sap-extn:context="" sap-extn:mode="async" inputVariable="BookingOrder"
+					portType="http://sap.com/xi/XI/Demo/Agency:FlightBookingOrderRequest_Abstract"
+					operation="FlightBookingOrderRequest_Abstract">
+					<correlations>
+						<correlation set="BookingConfirmation" initiate="yes" />
+					</correlations>
+					<catch faultName="sapxi:system_exception">
+						<throw name="system_exception" faultName="" />
+					</catch>
+				</invoke>
+				<assign name="IncreaseCount">
+					<copy>
+						<from expression=" MsgCount + &apos;1&apos;" />
+						<to variable="MsgCount" />
+					</copy>
+				</assign>
+				<receive name="ReceiveConfirmation" sap-extn:mode="async"
+					variable="AirlineResponse">
+					<correlations>
+						<correlation set="BookingConfirmation" initiate="no" />
+					</correlations>
+				</receive>
+				<switch name="CheckResult">
+					<case condition="Status = &quot;B&quot;;">
+						<sap-extn:conditionVariables>
+							<sap-extn:conditionVariable name="Status"
+								type="xsd:string"
+								value="AirlineResponse./p1:FlightBookingOrderConfirmation/BookingStatus" />
+						</sap-extn:conditionVariables>
+						<sequence>
+							<assign name="IncrementSuccessCounter">
+								<copy>
+									<from expression=" ConfCount + &apos;1&apos;" />
+									<to variable="ConfCount" />
+								</copy>
+							</assign>
+							<assign name="GetStatus">
+								<copy>
+									<from variable="AirlineResponse"
+										part="http://sap.com/xi/XI/Demo/Airline:FlightBookingOrderConfirmation"
+										query="/p1:FlightBookingOrderConfirmation/BookingStatus" />
+									<to variable="BookingStatus" />
+								</copy>
+							</assign>
+							<assign name="StoreConfirmation">
+								<copy>
+									<from variable="AirlineResponse"
+										part="http://sap.com/xi/XI/Demo/Airline:FlightBookingOrderConfirmation" />
+									<to variable="ConfirmedList_headerline"
+										part="http://sap.com/xi/XI/Demo/Airline:FlightBookingOrderConfirmation" />
+								</copy>
+							</assign>
+							<assign sap-extn:linkTo="StoreConfirmation">
+								<sap-extn:append>
+									<sap-extn:from sap-extn:variable="ConfirmedList_headerline" />
+									<sap-extn:to sap-extn:variable="ConfirmedList" />
+								</sap-extn:append>
+							</assign>
+						</sequence>
+					</case>
+					<otherwise>
+						<sequence>
+							<empty />
+						</sequence>
+					</otherwise>
+				</switch>
+			</sequence>
+		</sap-extn:parforeach>
+		<switch name="AllConfirmationsReceived">
+			<case condition=" MsgCount = ConfCount ;">
+				<sequence>
+					<sequence sap-extn:stepType="TRANSFORM" sap-extn:stepName="MergeSuccess"
+						sap-extn:mapProgram="http://sap.com/xi/XI/Demo/Agency:MergeOrderConfirmations_BPM"
+						xmlns:sap-extn="http://www.sap.com/xi/extensions">
+						<assign>
+							<sap-extn:copy>
+								<sap-extn:from sap-extn:variable="ConfirmedList" />
+								<sap-extn:to sap-extn:variable="ConfirmedList_headerline" />
+							</sap-extn:copy>
+						</assign>
+						<assign name="packMsg#1">
+							<copy>
+								<from
+									expression="sap-extn:packMsgInTransformParam(&apos;Transform_packedInMsg&apos;, &apos;inMsg&apos; , &apos;ConfirmedList_headerline&apos;, &apos;FlightBookingOrderConfirmation_Abstract&apos;, &apos;http://sap.com/xi/XI/Demo/Agency&apos;, &apos;&apos;, &apos;FlightBookingOrderConfirmation&apos;)" />
+								<to variable="Transform_packedInMsg" />
+							</copy>
+						</assign>
+						<invoke partnerLink="Transform_Link" portType="sapxi:Transform_PT"
+							operation="TransformOp" inputVariable="Transform_packedInMsg"
+							outputVariable="Transform_packedOutMsg" />
+						<assign name="unpackMsg#1">
+							<copy>
+								<from
+									expression="sap-extn:unpackMsgOutofTransformParam(&apos;Transform_packedOutMsg&apos;, &apos;outMsg&apos; , &apos;MultipleBookingOrderConfirmation_Abstract&apos;, &apos;http://sap.com/xi/XI/Demo/Agency&apos;, &apos;MultipleBookingOrderConfirmation&apos;)" />
+								<to variable="MultipleConfirmation" />
+							</copy>
+						</assign>
+					</sequence>
+					<invoke name="SendConfirmation" sap-extn:context=""
+						sap-extn:mode="async" inputVariable="MultipleConfirmation"
+						portType="http://sap.com/xi/XI/Demo/Agency:MultipleBookingOrderConfirmation_Abstract"
+						operation="MultipleBookingOrderConfirmation_Abstract"
+						xmlns:sap-extn="http://www.sap.com/xi/extensions">
+						<catch faultName="sapxi:system_exception">
+							<throw name="system_exception" faultName="" />
+						</catch>
+					</invoke>
+				</sequence>
+			</case>
+			<otherwise>
+				<sequence>
+					<sequence sap-extn:stepType="TRANSFORM" sap-extn:stepName="CreateFailureNotification"
+						sap-extn:mapProgram="http://sap.com/xi/XI/Demo/Agency:CreateFailureNotification_BPM"
+						xmlns:sap-extn="http://www.sap.com/xi/extensions">
+						<assign name="packMsg#1">
+							<copy>
+								<from
+									expression="sap-extn:packMsgInTransformParam(&apos;Transform_packedInMsg&apos;, &apos;inMsg&apos; , &apos;MultipleBooking&apos;, &apos;MultipleBookingOrderRequest_Abstract&apos;, &apos;http://sap.com/xi/XI/Demo/Agency&apos;, &apos;&apos;, &apos;MultipleBookingOrderRequest&apos;)" />
+								<to variable="Transform_packedInMsg" />
+							</copy>
+						</assign>
+						<invoke partnerLink="Transform_Link" portType="sapxi:Transform_PT"
+							operation="TransformOp" inputVariable="Transform_packedInMsg"
+							outputVariable="Transform_packedOutMsg" />
+						<assign name="unpackMsg#1">
+							<copy>
+								<from
+									expression="sap-extn:unpackMsgOutofTransformParam(&apos;Transform_packedOutMsg&apos;, &apos;outMsg&apos; , &apos;MultipleBookingOrderConfirmation_Abstract&apos;, &apos;http://sap.com/xi/XI/Demo/Agency&apos;, &apos;MultipleBookingOrderConfirmation&apos;)" />
+								<to variable="FailureNotification" />
+							</copy>
+						</assign>
+					</sequence>
+					<invoke name="SendFailureNotification"
+						sap-extn:replyContainer="MultipleBooking" sap-extn:mode="async"
+						inputVariable="FailureNotification"
+						portType="http://sap.com/xi/XI/Demo/Agency:MultipleBookingOrderConfirmation_Abstract"
+						operation="MultipleBookingOrderConfirmation_Abstract"
+						xmlns:sap-extn="http://www.sap.com/xi/extensions">
+						<catch faultName="sapxi:system_exception">
+							<throw name="system_exception" faultName="" />
+						</catch>
+					</invoke>
+					<sap-extn:parforeach name="CancelBookedFlights"
+						select="ConfirmedList" variable="ReceivedConfirmation"
+						xmlns:sap-extn="http://www.sap.com/xi/extensions">
+						<variables>
+							<variable name="AirlineCancel"
+								messageType="http://sap.com/xi/XI/Demo/Airline:FlightBookingOrderCancelationRequest" />
+							<variable name="ReceivedConfirmation"
+								messageType="http://sap.com/xi/XI/Demo/Airline:FlightBookingOrderConfirmation" />
+						</variables>
+						<sequence>
+							<sequence sap-extn:stepType="TRANSFORM"
+								sap-extn:stepName="CreateCancellationMessage"
+								sap-extn:mapProgram="http://sap.com/xi/XI/Demo/Agency:CreateBookingOrderCancelation_BPM">
+								<assign name="packMsg#1">
+									<copy>
+										<from
+											expression="sap-extn:packMsgInTransformParam(&apos;Transform_packedInMsg&apos;, &apos;inMsg&apos; , &apos;ReceivedConfirmation&apos;, &apos;FlightBookingOrderConfirmation_Abstract&apos;, &apos;http://sap.com/xi/XI/Demo/Agency&apos;, &apos;&apos;, &apos;FlightBookingOrderConfirmation&apos;)" />
+										<to variable="Transform_packedInMsg" />
+									</copy>
+								</assign>
+								<invoke partnerLink="Transform_Link" portType="sapxi:Transform_PT"
+									operation="TransformOp" inputVariable="Transform_packedInMsg"
+									outputVariable="Transform_packedOutMsg" />
+								<assign name="unpackMsg#1">
+									<copy>
+										<from
+											expression="sap-extn:unpackMsgOutofTransformParam(&apos;Transform_packedOutMsg&apos;, &apos;outMsg&apos; , &apos;FlightBookingOrderCancelationRequest_Abstract&apos;, &apos;http://sap.com/xi/XI/Demo/Agency&apos;, &apos;FlightBookingOrderCancelationRequest&apos;)" />
+										<to variable="AirlineCancel" />
+									</copy>
+								</assign>
+							</sequence>
+							<invoke name="SendCancellation" sap-extn:replyContainer="ReceivedConfirmation"
+								sap-extn:mode="async" inputVariable="AirlineCancel"
+								portType="http://sap.com/xi/XI/Demo/Agency:FlightBookingOrderCancelationRequest_Abstract"
+								operation="FlightBookingOrderCancelationRequest_Abstract">
+								<catch faultName="sapxi:system_exception">
+									<throw name="system_exception" faultName="" />
+								</catch>
+							</invoke>
+						</sequence>
+					</sap-extn:parforeach>
+				</sequence>
+			</otherwise>
+		</switch>
+	</sequence>
+</process>

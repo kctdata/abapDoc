@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:adoc="http://www.kctdata.cz/abapdoc" xmlns:step1="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:sapbpel4ws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+	xmlns:sapbpml="http://www.bpmi.org/2002/6/BPML" xmlns:saptns="http://www.sap.com"
+	xmlns:dublin="http://dublincore.org/documents/dces/" xmlns:SAP="http://www.sap.com/bc/bmt/wfm"
+	xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+	xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+	xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:activiti="http://activiti.org/bpmn"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<collaboration xmlns:sap-extn="http://www.sap.com/xi/extensions"
+		id="col.MultipleFlightBookingCoordination">
+		<participant id="part.MultipleFlightBookingCoordination"
+			name="MultipleFlightBookingCoordination" processRef="MultipleFlightBookingCoordination" />
+	</collaboration>
+	<process xmlns:sap-extn="http://www.sap.com/xi/extensions" id="MultipleFlightBookingCoordination"
+		isExecutable="true">
+		<laneSet id="lset.MultipleFlightBookingCoordination">
+			<lane name="Integration Engine" id="Background">
+				<flowNodeRef>SplitMultipleBookingOrder</flowNodeRef>
+				<flowNodeRef>Send single booking to airline</flowNodeRef>
+				<flowNodeRef>MergeSuccess</flowNodeRef>
+				<flowNodeRef>SendConfirmation</flowNodeRef>
+				<flowNodeRef>CreateFailureNotification</flowNodeRef>
+				<flowNodeRef>SendFailureNotification</flowNodeRef>
+				<flowNodeRef>CreateCancellationMessage</flowNodeRef>
+				<flowNodeRef>SendCancellation</flowNodeRef>
+			</lane>
+		</laneSet>
+		<startEvent name="Start" id="start_of_process" />
+		<intermediateCatchEvent id="ReceiveMultipleBooking"
+			name="ReceiveMultipleBooking : MultipleBooking">
+			<messageEventDefinition id="msg.ReceiveMultipleBooking" />
+		</intermediateCatchEvent>
+		<sequenceFlow id="2_start_of_process.ReceiveMultipleBooking"
+			name="" sourceRef="start_of_process" targetRef="ReceiveMultipleBooking" />
+		<task id="SplitMultipleBookingOrder" name="SplitMultipleBookingOrder" />
+		<sequenceFlow id="3_ReceiveMultipleBooking.SplitMultipleBookingOrder"
+			name="" sourceRef="ReceiveMultipleBooking" targetRef="SplitMultipleBookingOrder" />
+		<parallelGateway id="N1008A"
+			name="FOR-EACH (parallel):BookingOrder in BookingOrderList" />
+		<sequenceFlow id="4_SplitMultipleBookingOrder.N1008A"
+			name="" sourceRef="SplitMultipleBookingOrder" targetRef="N1008A" />
+		<sendTask id="Send single booking to airline"
+			name="Send single booking to airline mode: async in/out: BookingOrder/" />
+		<sequenceFlow id="1_N1008A.Send single booking to airline"
+			name="" sourceRef="N1008A" targetRef="Send single booking to airline" />
+		<task id="N100C0" name="IncreaseCount" />
+		<sequenceFlow id="2_Send single booking to airline.N100C0"
+			name="" sourceRef="Send single booking to airline" targetRef="N100C0" />
+		<intermediateCatchEvent id="ReceiveConfirmation"
+			name="ReceiveConfirmation : AirlineResponse">
+			<messageEventDefinition id="msg.ReceiveConfirmation" />
+		</intermediateCatchEvent>
+		<sequenceFlow id="3_N100C0.ReceiveConfirmation" name=""
+			sourceRef="N100C0" targetRef="ReceiveConfirmation" />
+		<exclusiveGateway id="CheckResult" name="SWITCH(CheckResult)" />
+		<sequenceFlow id="4_ReceiveConfirmation.CheckResult"
+			name="" sourceRef="ReceiveConfirmation" targetRef="CheckResult" />
+		<task id="N100EA" name="IncrementSuccessCounter" />
+		<sequenceFlow id="1_CheckResult.N100EA" name="Status = &quot;B&quot;;"
+			sourceRef="CheckResult" targetRef="N100EA" />
+		<task id="N100F7" name="GetStatus" />
+		<sequenceFlow id="2_N100EA.N100F7" name="" sourceRef="N100EA"
+			targetRef="N100F7" />
+		<task id="N10106" name="StoreConfirmation" />
+		<sequenceFlow id="3_N100F7.N10106" name="" sourceRef="N100F7"
+			targetRef="N10106" />
+		<sequenceFlow id="1_N10106.end.CheckResult" name=""
+			sourceRef="N10106" targetRef="end.CheckResult" />
+		<sequenceFlow id="2_CheckResult.end.CheckResult" name=""
+			sourceRef="CheckResult" targetRef="end.CheckResult" />
+		<inclusiveGateway id="end.CheckResult" name="SWITCH(CheckResult)" />
+		<sequenceFlow id="1_end.CheckResult.end.N1008A" name=""
+			sourceRef="end.CheckResult" targetRef="end.N1008A" />
+		<inclusiveGateway id="end.N1008A" name="FOR-EACH" />
+		<exclusiveGateway id="AllConfirmationsReceived"
+			name="SWITCH(AllConfirmationsReceived)" />
+		<sequenceFlow id="7_end.N1008A.AllConfirmationsReceived"
+			name="" sourceRef="end.N1008A" targetRef="AllConfirmationsReceived" />
+		<task id="MergeSuccess" name="MergeSuccess" />
+		<sequenceFlow id="1_AllConfirmationsReceived.MergeSuccess"
+			name=" MsgCount = ConfCount ;" sourceRef="AllConfirmationsReceived"
+			targetRef="MergeSuccess" />
+		<sendTask id="SendConfirmation"
+			name="SendConfirmation mode: async in/out: MultipleConfirmation/" />
+		<sequenceFlow id="2_MergeSuccess.SendConfirmation" name=""
+			sourceRef="MergeSuccess" targetRef="SendConfirmation" />
+		<sequenceFlow id="1_SendConfirmation.end.AllConfirmationsReceived"
+			name="" sourceRef="SendConfirmation" targetRef="end.AllConfirmationsReceived" />
+		<task id="CreateFailureNotification" name="CreateFailureNotification" />
+		<sequenceFlow id="1_AllConfirmationsReceived.CreateFailureNotification"
+			name="" sourceRef="AllConfirmationsReceived" targetRef="CreateFailureNotification" />
+		<sendTask id="SendFailureNotification"
+			name="SendFailureNotification mode: async in/out: FailureNotification/" />
+		<sequenceFlow id="2_CreateFailureNotification.SendFailureNotification"
+			name="" sourceRef="CreateFailureNotification" targetRef="SendFailureNotification" />
+		<parallelGateway id="N101BD"
+			name="FOR-EACH (parallel):ReceivedConfirmation in ConfirmedList" />
+		<sequenceFlow id="3_SendFailureNotification.N101BD" name=""
+			sourceRef="SendFailureNotification" targetRef="N101BD" />
+		<task id="CreateCancellationMessage" name="CreateCancellationMessage" />
+		<sequenceFlow id="1_N101BD.CreateCancellationMessage"
+			name="" sourceRef="N101BD" targetRef="CreateCancellationMessage" />
+		<sendTask id="SendCancellation"
+			name="SendCancellation mode: async in/out: AirlineCancel/" />
+		<sequenceFlow id="2_CreateCancellationMessage.SendCancellation"
+			name="" sourceRef="CreateCancellationMessage" targetRef="SendCancellation" />
+		<sequenceFlow id="1_SendCancellation.end.N101BD" name=""
+			sourceRef="SendCancellation" targetRef="end.N101BD" />
+		<inclusiveGateway id="end.N101BD" name="FOR-EACH" />
+		<sequenceFlow id="2_end.N101BD.end.AllConfirmationsReceived"
+			name="" sourceRef="end.N101BD" targetRef="end.AllConfirmationsReceived" />
+		<inclusiveGateway id="end.AllConfirmationsReceived"
+			name="SWITCH(AllConfirmationsReceived)" />
+		<endEvent name="End" id="end_of_process" />
+		<sequenceFlow id="10_end.AllConfirmationsReceived.end_of_process"
+			name="" sourceRef="end.AllConfirmationsReceived" targetRef="end_of_process" />
+	</process>
+	<bpmndi:BPMNDiagram id="BPMNDiagram_col.MultipleFlightBookingCoordination">
+		<bpmndi:BPMNPlane id="BPMNPlane_col.MultipleFlightBookingCoordination"
+			bpmnElement="col.MultipleFlightBookingCoordination">
+			<bpmndi:BPMNShape bpmnElement="part.MultipleFlightBookingCoordination"
+				id="BPMNShape_part.MultipleFlightBookingCoordination">
+				<omgdc:Bounds height="360" width="4650" x="40" y="80" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="Background" id="lane:Background">
+				<omgdc:Bounds height="360" width="4600" x="90" y="80" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="start_of_process"
+				id="startEventstart_of_process">
+				<omgdc:Bounds height="40" width="40" x="340" y="110" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="ReceiveMultipleBooking"
+				id="intermediateCatchEventReceiveMultipleBooking">
+				<omgdc:Bounds height="40" width="40" x="540"
+					y="122.00000000000001" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SplitMultipleBookingOrder"
+				id="taskSplitMultipleBookingOrder">
+				<omgdc:Bounds height="80" width="100" x="740" y="134" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="N1008A"
+				id="parallelGatewayN1008A">
+				<omgdc:Bounds height="50" width="50" x="940" y="146" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="Send single booking to airline"
+				id="sendTaskSend single booking to airline">
+				<omgdc:Bounds height="80" width="100" x="1140" y="158" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="N100C0" id="taskN100C0">
+				<omgdc:Bounds height="80" width="100" x="1340" y="170" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="ReceiveConfirmation"
+				id="intermediateCatchEventReceiveConfirmation">
+				<omgdc:Bounds height="40" width="40" x="1540" y="182" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="CheckResult"
+				id="exclusiveGatewayCheckResult">
+				<omgdc:Bounds height="50" width="50" x="1740" y="194" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="N100EA" id="taskN100EA">
+				<omgdc:Bounds height="80" width="100" x="1940"
+					y="205.99999999999997" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="N100F7" id="taskN100F7">
+				<omgdc:Bounds height="80" width="100" x="2140" y="218" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="N10106" id="taskN10106">
+				<omgdc:Bounds height="80" width="100" x="2340" y="110" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.CheckResult"
+				id="inclusiveGatewayend.CheckResult">
+				<omgdc:Bounds height="50" width="50" x="2540"
+					y="122.00000000000001" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.N1008A"
+				id="inclusiveGatewayend.N1008A">
+				<omgdc:Bounds height="50" width="50" x="2740" y="134" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="AllConfirmationsReceived"
+				id="exclusiveGatewayAllConfirmationsReceived">
+				<omgdc:Bounds height="50" width="50" x="2940" y="146" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="MergeSuccess" id="taskMergeSuccess">
+				<omgdc:Bounds height="80" width="100" x="3140" y="158" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SendConfirmation"
+				id="sendTaskSendConfirmation">
+				<omgdc:Bounds height="80" width="100" x="3340" y="170" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="CreateFailureNotification"
+				id="taskCreateFailureNotification">
+				<omgdc:Bounds height="80" width="100" x="3160" y="278" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SendFailureNotification"
+				id="sendTaskSendFailureNotification">
+				<omgdc:Bounds height="80" width="100" x="3360.0000000000005"
+					y="290" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="N101BD"
+				id="parallelGatewayN101BD">
+				<omgdc:Bounds height="50" width="50" x="3540" y="182" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="CreateCancellationMessage"
+				id="taskCreateCancellationMessage">
+				<omgdc:Bounds height="80" width="100" x="3740" y="194" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="SendCancellation"
+				id="sendTaskSendCancellation">
+				<omgdc:Bounds height="80" width="100" x="3940"
+					y="205.99999999999997" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.N101BD"
+				id="inclusiveGatewayend.N101BD">
+				<omgdc:Bounds height="50" width="50" x="4140" y="218" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end.AllConfirmationsReceived"
+				id="inclusiveGatewayend.AllConfirmationsReceived">
+				<omgdc:Bounds height="50" width="50" x="4340" y="110" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="end_of_process"
+				id="endEventend_of_process">
+				<omgdc:Bounds height="40" width="40" x="4540"
+					y="122.00000000000001" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNEdge bpmnElement="2_start_of_process.ReceiveMultipleBooking"
+				id="edg:2_start_of_process.ReceiveMultipleBooking">
+				<omgdi:waypoint x="380" y="130" />
+				<omgdi:waypoint x="540" y="142" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="3_ReceiveMultipleBooking.SplitMultipleBookingOrder"
+				id="edg:3_ReceiveMultipleBooking.SplitMultipleBookingOrder">
+				<omgdi:waypoint x="580" y="142" />
+				<omgdi:waypoint x="740" y="174" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="4_SplitMultipleBookingOrder.N1008A"
+				id="edg:4_SplitMultipleBookingOrder.N1008A">
+				<omgdi:waypoint x="840" y="174" />
+				<omgdi:waypoint x="940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_N1008A.Send single booking to airline"
+				id="edg:1_N1008A.Send single booking to airline">
+				<omgdi:waypoint x="990" y="171" />
+				<omgdi:waypoint x="1140" y="198" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_Send single booking to airline.N100C0"
+				id="edg:2_Send single booking to airline.N100C0">
+				<omgdi:waypoint x="1240" y="198" />
+				<omgdi:waypoint x="1340" y="210" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="3_N100C0.ReceiveConfirmation"
+				id="edg:3_N100C0.ReceiveConfirmation">
+				<omgdi:waypoint x="1440" y="210" />
+				<omgdi:waypoint x="1540" y="202" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="4_ReceiveConfirmation.CheckResult"
+				id="edg:4_ReceiveConfirmation.CheckResult">
+				<omgdi:waypoint x="1580" y="202" />
+				<omgdi:waypoint x="1740" y="219" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_CheckResult.N100EA"
+				id="edg:1_CheckResult.N100EA">
+				<omgdi:waypoint x="1790" y="219" />
+				<omgdi:waypoint x="1940" y="245.99999999999997" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_N100EA.N100F7" id="edg:2_N100EA.N100F7">
+				<omgdi:waypoint x="2040" y="245.99999999999997" />
+				<omgdi:waypoint x="2140" y="258" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="3_N100F7.N10106" id="edg:3_N100F7.N10106">
+				<omgdi:waypoint x="2240" y="258" />
+				<omgdi:waypoint x="2340" y="150" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_N10106.end.CheckResult"
+				id="edg:1_N10106.end.CheckResult">
+				<omgdi:waypoint x="2440" y="150" />
+				<omgdi:waypoint x="2540" y="147" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_CheckResult.end.CheckResult"
+				id="edg:2_CheckResult.end.CheckResult">
+				<omgdi:waypoint x="1790" y="219" />
+				<omgdi:waypoint x="2540" y="147" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_end.CheckResult.end.N1008A"
+				id="edg:1_end.CheckResult.end.N1008A">
+				<omgdi:waypoint x="2590" y="147" />
+				<omgdi:waypoint x="2740" y="159" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="7_end.N1008A.AllConfirmationsReceived"
+				id="edg:7_end.N1008A.AllConfirmationsReceived">
+				<omgdi:waypoint x="2790" y="159" />
+				<omgdi:waypoint x="2940" y="171" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_AllConfirmationsReceived.MergeSuccess"
+				id="edg:1_AllConfirmationsReceived.MergeSuccess">
+				<omgdi:waypoint x="2990" y="171" />
+				<omgdi:waypoint x="3140" y="198" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_MergeSuccess.SendConfirmation"
+				id="edg:2_MergeSuccess.SendConfirmation">
+				<omgdi:waypoint x="3240" y="198" />
+				<omgdi:waypoint x="3340" y="210" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SendConfirmation.end.AllConfirmationsReceived"
+				id="edg:1_SendConfirmation.end.AllConfirmationsReceived">
+				<omgdi:waypoint x="3440" y="210" />
+				<omgdi:waypoint x="4340" y="135" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge
+				bpmnElement="1_AllConfirmationsReceived.CreateFailureNotification"
+				id="edg:1_AllConfirmationsReceived.CreateFailureNotification">
+				<omgdi:waypoint x="2990" y="171" />
+				<omgdi:waypoint x="3160" y="318" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge
+				bpmnElement="2_CreateFailureNotification.SendFailureNotification"
+				id="edg:2_CreateFailureNotification.SendFailureNotification">
+				<omgdi:waypoint x="3260" y="318" />
+				<omgdi:waypoint x="3360.0000000000005" y="330" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="3_SendFailureNotification.N101BD"
+				id="edg:3_SendFailureNotification.N101BD">
+				<omgdi:waypoint x="3460.0000000000005" y="330" />
+				<omgdi:waypoint x="3540" y="207" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_N101BD.CreateCancellationMessage"
+				id="edg:1_N101BD.CreateCancellationMessage">
+				<omgdi:waypoint x="3590" y="207" />
+				<omgdi:waypoint x="3740" y="234" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_CreateCancellationMessage.SendCancellation"
+				id="edg:2_CreateCancellationMessage.SendCancellation">
+				<omgdi:waypoint x="3840" y="234" />
+				<omgdi:waypoint x="3940" y="245.99999999999997" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_SendCancellation.end.N101BD"
+				id="edg:1_SendCancellation.end.N101BD">
+				<omgdi:waypoint x="4040" y="245.99999999999997" />
+				<omgdi:waypoint x="4140" y="243" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="2_end.N101BD.end.AllConfirmationsReceived"
+				id="edg:2_end.N101BD.end.AllConfirmationsReceived">
+				<omgdi:waypoint x="4190" y="243" />
+				<omgdi:waypoint x="4340" y="135" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="10_end.AllConfirmationsReceived.end_of_process"
+				id="edg:10_end.AllConfirmationsReceived.end_of_process">
+				<omgdi:waypoint x="4390" y="135" />
+				<omgdi:waypoint x="4540" y="142" />
+			</bpmndi:BPMNEdge>
+		</bpmndi:BPMNPlane>
+	</bpmndi:BPMNDiagram>
+</definitions>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:sap-extn="http://www.sap.com/xi/extensions" xmlns:ic="http://sap.com/xi/BASIS"
+	xmlns:adoc="http://www.kctdata.cz/abapdoc" xmlns:sapbpml="http://www.bpmi.org/2002/6/BPML"
+	xmlns:saptns="http://www.sap.com" xmlns:dublin="http://dublincore.org/documents/dces/"
+	xmlns:SAP="http://www.sap.com/bc/bmt/wfm" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+	xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+	xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+	xmlns:activiti="http://activiti.org/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	targetNamespace="http://rapilabs.com/definitions/20120204"
+	expressionLanguage="http://www.w3.org/1999/XPath" typeLanguage="http://www.w3.org/2001/XMLSchema">
+	<collaboration id="col.id1">
+		<participant id="part.id1" name="testpopis" processRef="process.id1" />
+	</collaboration>
+	<process id="process.id1">
+		<laneSet id="lset.id1">
+			<lane
+				id="CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap_N10001"
+				name="CLOUDCARE_TST">
+				<flowNodeRef>start_of_process</flowNodeRef>
+				<flowNodeRef>CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap
+				</flowNodeRef>
+			</lane>
+			<lane name="SAP PI" id="sapPiId1">
+				<flowNodeRef>asyncMsg1</flowNodeRef>
+				<flowNodeRef>CLOUDCARE_TSTcc_http2aex</flowNodeRef>
+				<flowNodeRef>OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N10067
+				</flowNodeRef>
+				<flowNodeRef>ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N10067
+				</flowNodeRef>
+				<flowNodeRef>OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N100B1
+				</flowNodeRef>
+				<flowNodeRef>ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N100B1
+				</flowNodeRef>
+				<flowNodeRef>A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100
+				</flowNodeRef>
+				<flowNodeRef>cc_aex2idoc_cloudcare-N100E1</flowNodeRef>
+			</lane>
+			<lane id="R30CLNT010_N10045" name="Party: Component: R30CLNT010" />
+			<lane id="A11CLNT211_N10050" name="Party: Component: A11CLNT211">
+				<flowNodeRef>recEcc_aex2idoc_cloudcare</flowNodeRef>
+				<flowNodeRef>recTcc_aex2idoc_cloudcare</flowNodeRef>
+			</lane>
+		</laneSet>
+		<adoc:block>
+			<adoc:branch>
+				<startEvent name="Start" id="start_of_process" />
+				<sendTask
+					id="CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap"
+					name="Send a message: SI_SALES_ORDER" />
+				<intermediateCatchEvent name="async message arrived"
+					id="asyncMsg1">
+					<messageEventDefinition id="asyncMsg1EvDef1" />
+				</intermediateCatchEvent>
+				<receiveTask id="CLOUDCARE_TSTcc_http2aex" name="Comm.channel: cc_http2aex" />
+				<complexGateway name="Receiver determination" id="recDetId1" />
+				<adoc:block>
+					<adoc:branch adocCondition="R30CLNT010 ">
+						<endEvent name="no processing defined" id="endEN10043">
+							<terminateEventDefinition id="termEvent.N10043" />
+						</endEvent>
+					</adoc:branch>
+					<adoc:branch adocCondition="A11CLNT211 ">
+						<complexGateway name="Rec.Interf.determination" id="recIntDetA11CLNT211" />
+						<adoc:block>
+							<adoc:branch adocCondition="/data/cbs_document/posting_date CP ++052014">
+								<task
+									id="OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N10067"
+									name="Oper.Mapping: OM_SALES_ORDER_CREATE (operation: CREATE)" />
+								<task adocNoFollowerSeqFlow="X"
+									id="ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N10067"
+									name="Receiver interface: ZCBS_DOCUMENT.ZCBS_DOCUMENT"
+									adocGoToId="A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100" />
+							</adoc:branch>
+							<adoc:branch adocCondition="">
+								<task
+									id="OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N100B1"
+									name="Oper.Mapping: OM_SALES_ORDER_CREATE (operation: CREATE)" />
+								<task adocNoFollowerSeqFlow="X"
+									id="ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N100B1"
+									name="Receiver interface: ZCBS_DOCUMENT.ZCBS_DOCUMENT"
+									adocGoToId="A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100" />
+							</adoc:branch>
+						</adoc:block>
+					</adoc:branch>
+				</adoc:block>
+				<adoc:block>
+					<adoc:branch>
+						<sendTask adocNoPredecessorSeqFlow="X"
+							id="A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100"
+							name="Comm.channel: cc_aex2idoc_cloudcare" />
+						<intermediateCatchEvent name="async message arrived"
+							id="recEcc_aex2idoc_cloudcare">
+							<messageEventDefinition id="asyncMsg1EvDef1" />
+						</intermediateCatchEvent>
+						<receiveTask id="recTcc_aex2idoc_cloudcare"
+							name="Receive a message: ZCBS_DOCUMENT.ZCBS_DOCUMENT" />
+						<endEvent id="endEcc_aex2idoc_cloudcare" />
+					</adoc:branch>
+				</adoc:block>
+			</adoc:branch>
+		</adoc:block>
+	</process>
+</definitions>

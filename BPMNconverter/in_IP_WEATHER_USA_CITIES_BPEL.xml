@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?><process name="IP_WEATHER_USA_CITIES" xsi:schemalocation="BPEL4WS.xsd" targetNamespace="http://kctdata.cz/vyuka" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.xmlsoap.org/ws/2003/03/business-process/" xmlns:tns="http://kctdata.cz/vyuka" xmlns:sapxi="http://www.sap.com/xi/">
+<sap-extn:annotation xmlns:sap-extn="http://www.sap.com/xi/extensions">
+<sap-extn:processCategory>process</sap-extn:processCategory>
+</sap-extn:annotation>
+
+<partnerLinks>
+<partnerLink name="Transform_Link" partnerLinkType="sapxi:Transform_LT" partnerRole="Transform_Role"/>
+</partnerLinks>
+<variables>
+<variable name="CITIES" messageType="http://kctdata.cz/vyuka:MT_CITIES"/>
+<variable name="INFO_MULTI" messageType="http://kctdata.cz/vyuka:MT_INFO" sap-extn:multiline="true" xmlns:sap-extn="http://www.sap.com/xi/extensions"/>
+<variable name="INFO_MULTI_headerline" messageType="http://kctdata.cz/vyuka:MT_INFO"/>
+<variable name="LIST_MULTI" messageType="http://kctdata.cz/vyuka:MT_CITY_MULTI" sap-extn:multiline="true" xmlns:sap-extn="http://www.sap.com/xi/extensions"/>
+<variable name="LIST_MULTI_headerline" messageType="http://kctdata.cz/vyuka:MT_CITY_MULTI"/>
+<variable name="MAIL" messageType="http://kctdata.cz/vyuka:Mail"/>
+<variable name="Transform_packedInMsg" messageType="sapxi:inTransformMsg"/>
+<variable name="Transform_packedOutMsg" messageType="sapxi:outTransformMsg"/>
+</variables>
+<sequence>
+<receive name="Seznam_mest_vstup" sap-extn:mode="async" variable="CITIES" createInstance="yes" xmlns:sap-extn="http://www.sap.com/xi/extensions"/>
+<sequence sap-extn:stepType="TRANSFORM" sap-extn:stepName="CITIES2BLOCK" sap-extn:mapProgram="http://kctdata.cz/vyuka:OM_IP_CITIES2MULTI" xmlns:sap-extn="http://www.sap.com/xi/extensions">
+<assign name="packMsg#1">
+<copy>
+<from expression="sap-extn:packMsgInTransformParam(&apos;Transform_packedInMsg&apos;, &apos;inMsg&apos; , &apos;CITIES&apos;, &apos;SI_USA_CITIES_ABS&apos;, &apos;http://kctdata.cz/vyuka&apos;, &apos;&apos;, &apos;MT_CITIES&apos;)"/>
+<to variable="Transform_packedInMsg"/>
+</copy>
+</assign>
+<invoke partnerLink="Transform_Link" portType="sapxi:Transform_PT" operation="TransformOp" inputVariable="Transform_packedInMsg" outputVariable="Transform_packedOutMsg"/>
+<assign name="unpackMsg#1">
+<copy>
+<from expression="sap-extn:unpackMsgOutofTransformParam(&apos;Transform_packedOutMsg&apos;, &apos;outMsg&apos; , &apos;SI_CITY_MULTI_ABS&apos;, &apos;http://kctdata.cz/vyuka&apos;, &apos;MT_CITY_MULTI&apos;)"/>
+<to variable="LIST_MULTI_headerline"/>
+</copy>
+</assign>
+<assign>
+<sap-extn:copy>
+<sap-extn:from sap-extn:variable="LIST_MULTI"/>
+<sap-extn:to sap-extn:variable="LIST_MULTI_headerline"/>
+</sap-extn:copy>
+</assign>
+</sequence>
+<sap-extn:foreach name="Dotazy na počasí" select="LIST_MULTI" variable="CITY" xmlns:sap-extn="http://www.sap.com/xi/extensions">
+<variables>
+<variable name="CITY" messageType="http://kctdata.cz/vyuka:MT_CITY_MULTI"/>
+<variable name="INFO" messageType="http://kctdata.cz/vyuka:MT_INFO"/>
+<variable name="POCASI_resp" messageType="http://kctdata.cz/vyuka:ED_deeptraining_com_WS"/>
+</variables>
+<faultHandlers>
+<catch faultName="tns:ERROR_APPL">
+<sequence>
+<empty name="ZpracovaniChyby">
+<sap-extn:documentation/>
+</empty>
+</sequence>
+</catch>
+</faultHandlers>
+<sequence>
+<invoke name="Pozadavek_na_pocasi" sap-extn:context="" sap-extn:mode="sync" inputVariable="CITY" outputVariable="POCASI_resp" portType="http://kctdata.cz/vyuka:SI_WEATHER_USA_CITIES_ABS" operation="SI_WEATHER_USA_CITIES_ABS" sap-extn:syncInfNamespace="http://kctdata.cz/vyuka">
+<catch faultName="sapxi:system_exception">
+<throw name="system_exception" faultName=""/>
+</catch>
+<catch faultName="http://kctdata.cz/vyuka:StandardMessageFault">
+<throw name="StandardMessageFault" faultName="ERROR_APPL"/>
+</catch>
+</invoke>
+<sequence sap-extn:stepType="TRANSFORM" sap-extn:stepName="Generuj_Info" sap-extn:mapProgram="http://kctdata.cz/vyuka:OM_DATA2CONTAINER">
+<assign name="packMsg#1">
+<copy>
+<from expression="sap-extn:packMsgInTransformParam(&apos;Transform_packedInMsg&apos;, &apos;inMsg&apos; , &apos;CITY&apos;, &apos;SI_CITY_MULTI_ABS&apos;, &apos;http://kctdata.cz/vyuka&apos;, &apos;&apos;, &apos;MT_CITY_MULTI&apos;)"/>
+<to variable="Transform_packedInMsg"/>
+</copy>
+</assign>
+<assign name="packMsg#2">
+<copy>
+<from expression="sap-extn:packMsgInTransformParam(&apos;Transform_packedInMsg&apos;, &apos;inMsg&apos; , &apos;POCASI_resp&apos;, &apos;SI_WEATHER_USA_CITIES_ABS_resp&apos;, &apos;http://kctdata.cz/vyuka&apos;, &apos;&apos;, &apos;ED_deeptraining_com_WS&apos;)"/>
+<to variable="Transform_packedInMsg"/>
+</copy>
+</assign>
+<invoke partnerLink="Transform_Link" portType="sapxi:Transform_PT" operation="TransformOp" inputVariable="Transform_packedInMsg" outputVariable="Transform_packedOutMsg"/>
+<assign name="unpackMsg#1">
+<copy>
+<from expression="sap-extn:unpackMsgOutofTransformParam(&apos;Transform_packedOutMsg&apos;, &apos;outMsg&apos; , &apos;SI_INFO_ABS&apos;, &apos;http://kctdata.cz/vyuka&apos;, &apos;MT_INFO&apos;)"/>
+<to variable="INFO"/>
+</copy>
+</assign>
+</sequence>
+<assign name="Container Operation1">
+<copy>
+<from variable="INFO" part="http://kctdata.cz/vyuka:MT_INFO"/>
+<to variable="INFO_MULTI_headerline" part="http://kctdata.cz/vyuka:MT_INFO"/>
+</copy>
+</assign>
+<assign sap-extn:linkTo="Container Operation1">
+<sap-extn:append>
+<sap-extn:from sap-extn:variable="INFO_MULTI_headerline"/>
+<sap-extn:to sap-extn:variable="INFO_MULTI"/>
+</sap-extn:append>
+</assign>
+</sequence>
+</sap-extn:foreach>
+<sequence sap-extn:stepType="TRANSFORM" sap-extn:stepName="Trans_MULTI2MAIL" sap-extn:mapProgram="http://kctdata.cz/vyuka:OM_MULTI2MAIL" xmlns:sap-extn="http://www.sap.com/xi/extensions">
+<assign>
+<sap-extn:copy>
+<sap-extn:from sap-extn:variable="INFO_MULTI"/>
+<sap-extn:to sap-extn:variable="INFO_MULTI_headerline"/>
+</sap-extn:copy>
+</assign>
+<assign name="packMsg#1">
+<copy>
+<from expression="sap-extn:packMsgInTransformParam(&apos;Transform_packedInMsg&apos;, &apos;inMsg&apos; , &apos;INFO_MULTI_headerline&apos;, &apos;SI_INFO_ABS&apos;, &apos;http://kctdata.cz/vyuka&apos;, &apos;&apos;, &apos;MT_INFO&apos;)"/>
+<to variable="Transform_packedInMsg"/>
+</copy>
+</assign>
+<invoke partnerLink="Transform_Link" portType="sapxi:Transform_PT" operation="TransformOp" inputVariable="Transform_packedInMsg" outputVariable="Transform_packedOutMsg"/>
+<assign name="unpackMsg#1">
+<copy>
+<from expression="sap-extn:unpackMsgOutofTransformParam(&apos;Transform_packedOutMsg&apos;, &apos;outMsg&apos; , &apos;SI_MAIL_ABS&apos;, &apos;http://kctdata.cz/vyuka&apos;, &apos;Mail&apos;)"/>
+<to variable="MAIL"/>
+</copy>
+</assign>
+</sequence>
+<invoke name="Odeslani_emailu" sap-extn:context="" sap-extn:mode="async" inputVariable="MAIL" portType="http://kctdata.cz/vyuka:SI_MAIL_ABS" operation="SI_MAIL_ABS" xmlns:sap-extn="http://www.sap.com/xi/extensions">
+<catch faultName="sapxi:system_exception">
+<throw name="system_exception" faultName=""/>
+</catch>
+</invoke>
+</sequence>
+</process>

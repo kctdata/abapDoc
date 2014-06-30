@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:xhtml="http://www.w3.org/TR/xhtml1/" xmlns:adoc="http://www.kctdata.cz/abapdoc"
+	xmlns:sapbpml="http://www.bpmi.org/2002/6/BPML" xmlns:saptns="http://www.sap.com"
+	xmlns:dublin="http://dublincore.org/documents/dces/" xmlns:SAP="http://www.sap.com/bc/bmt/wfm"
+	xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+	xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+	xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:activiti="http://activiti.org/bpmn"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://rapilabs.com/definitions/20120204"
+	expressionLanguage="http://www.w3.org/1999/XPath" typeLanguage="http://www.w3.org/2001/XMLSchema">
+	<collaboration id="col.ISUSuSwCheck">
+		<participant id="part.ISUSuSwCheck" name="ISU: Change of Supplier - Chck Framework"
+			processRef="ISUSuSwCheck" />
+	</collaboration>
+	<process id="ISUSuSwCheck">
+		<laneSet id="lset.ISUSuSwCheck">
+			<lane name="Background" id="Background">
+				<flowNodeRef>SAP_0000000019</flowNodeRef>
+				<flowNodeRef>SAP_0000000004</flowNodeRef>
+				<flowNodeRef>SAP_0000000037</flowNodeRef>
+				<flowNodeRef>SAP_0000000180</flowNodeRef>
+				<flowNodeRef>SAP_0000000385</flowNodeRef>
+				<flowNodeRef>SAP_0000000390</flowNodeRef>
+				<flowNodeRef>SAP_0000000086</flowNodeRef>
+				<flowNodeRef>SAP_0000000095</flowNodeRef>
+				<flowNodeRef>SAP_0000000101</flowNodeRef>
+				<flowNodeRef>SAP_0000000109</flowNodeRef>
+				<flowNodeRef>SAP_0000000115</flowNodeRef>
+				<flowNodeRef>SAP_0000000311</flowNodeRef>
+				<flowNodeRef>SAP_0000000374</flowNodeRef>
+				<flowNodeRef>SAP_0000000133</flowNodeRef>
+				<flowNodeRef>SAP_0000000471</flowNodeRef>
+				<flowNodeRef>SAP_0000000476</flowNodeRef>
+				<flowNodeRef>SAP_0000000276</flowNodeRef>
+				<flowNodeRef>SAP_0000000297</flowNodeRef>
+				<flowNodeRef>SAP_0000000303</flowNodeRef>
+				<flowNodeRef>SAP_0000000285</flowNodeRef>
+				<flowNodeRef>SAP_0000000291</flowNodeRef>
+				<flowNodeRef>SAP_0000000080</flowNodeRef>
+				<flowNodeRef>SAP_0000000377</flowNodeRef>
+				<flowNodeRef>SAP_0000000270</flowNodeRef>
+				<flowNodeRef>SAP_0000000413</flowNodeRef>
+				<flowNodeRef>SAP_0000000418</flowNodeRef>
+				<flowNodeRef>SAP_0000000139</flowNodeRef>
+				<flowNodeRef>SAP_0000000154</flowNodeRef>
+				<flowNodeRef>SAP_0000000160</flowNodeRef>
+				<flowNodeRef>SAP_0000000148</flowNodeRef>
+				<flowNodeRef>SAP_0000000166</flowNodeRef>
+				<flowNodeRef>SAP_0000000452</flowNodeRef>
+				<flowNodeRef>SAP_0000000457</flowNodeRef>
+				<flowNodeRef>SAP_0000000221</flowNodeRef>
+				<flowNodeRef>SAP_0000000244</flowNodeRef>
+				<flowNodeRef>SAP_0000000250</flowNodeRef>
+				<flowNodeRef>SAP_0000000230</flowNodeRef>
+				<flowNodeRef>SAP_0000000236</flowNodeRef>
+				<flowNodeRef>SAP_0000000174</flowNodeRef>
+				<flowNodeRef>SAP_0000000433</flowNodeRef>
+				<flowNodeRef>SAP_0000000438</flowNodeRef>
+				<flowNodeRef>SAP_0000000186</flowNodeRef>
+				<flowNodeRef>SAP_0000000195</flowNodeRef>
+				<flowNodeRef>SAP_0000000201</flowNodeRef>
+				<flowNodeRef>SAP_0000000207</flowNodeRef>
+				<flowNodeRef>SAP_0000000213</flowNodeRef>
+				<flowNodeRef>SAP_0000000338</flowNodeRef>
+				<flowNodeRef>SAP_0000000336</flowNodeRef>
+				<flowNodeRef>SAP_0000000350</flowNodeRef>
+			</lane>
+		</laneSet>
+		<adoc:block>
+			<adoc:branch>
+				<startEvent name="Start" id="start_of_process" />
+				<task id="SAP_0000000004" name="Perform Check" />
+				<exclusiveGateway id="SAP_0000000027"
+					name="SWITCH: Error Occurred During Check?" />
+				<adoc:block>
+					<adoc:branch
+						adocCondition="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING !=&#10;&#9;&#9;&#9;&#9;&#9;&#9;'0' and $tns:CHECKERRORMSG/ISU00_MESSAGE-MSGNO !=&#10;&#9;&#9;&#9;&#9;&#9;&#9;''">
+						<exclusiveGateway id="SAP_0000000354"
+							name="SWITCH: Error Message Known?" />
+						<adoc:block>
+							<adoc:branch adocCondition="$tns:CHECKERRORMSG/ISU00_MESSAGE-MSGNO != '' ">
+								<task id="SAP_0000000037" name="Create Notification Object" />
+							</adoc:branch>
+							<adoc:branch adocCondition="" default="true" />
+						</adoc:block>
+						<inclusiveGateway id="end.SAP_0000000354" name="SWITCH" />
+					</adoc:branch>
+					<adoc:branch adocCondition="" default="true" />
+				</adoc:block>
+				<inclusiveGateway id="end.SAP_0000000027" name="SWITCH" />
+				<exclusiveGateway id="SAP_0000000043" name="SWITCH: Result of Check" />
+				<adoc:block>
+					<adoc:branch
+						adocCondition="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'0'">
+						<task id="SAP_0000000180" name="Status of Message Set to 014" />
+					</adoc:branch>
+					<adoc:branch
+						adocCondition="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'1'">
+						<task id="SAP_0000000086"
+							name="Temporary Error During Check &amp; for Switch&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Document &amp;" />
+						<exclusiveGateway id="SAP_0000000087" name="SWITCH: XOR" />
+						<adoc:block>
+							<adoc:branch
+								adocCondition="$SAP:_WI_RESULT = 'Continue Processing / Data&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Modified Manually'">
+								<task id="SAP_0000000095"
+									name="Record Activity 200 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+								<task id="SAP_0000000101"
+									name="Set Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+							</adoc:branch>
+							<adoc:branch
+								adocCondition="$SAP:_WI_RESULT = 'Reject Notification / Cancel&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Processing'">
+								<task id="SAP_0000000109"
+									name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+								<task id="SAP_0000000115"
+									name="Set Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+							</adoc:branch>
+							<adoc:branch type="exception" adocCondition="Exception code: SAP:8991">
+								<task id="SAP_0000000385"
+									name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+								<task id="SAP_0000000390"
+									name="Set Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+							</adoc:branch>
+						</adoc:block>
+						<inclusiveGateway id="end.SAP_0000000087" name="SWITCH" />
+					</adoc:branch>
+					<adoc:branch
+						adocCondition="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'2'">
+						<task id="SAP_0000000311"
+							name="Set Status of Message to 006 (Terminated)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+					</adoc:branch>
+					<adoc:branch
+						adocCondition="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'3'">
+						<task id="SAP_0000000374"
+							name="Start Agent Information Asynchronously&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+						<task id="SAP_0000000133"
+							name="Set Status of Message to 006 (Terminated)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+					</adoc:branch>
+					<adoc:branch
+						adocCondition="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'4'">
+						<task id="SAP_0000000276"
+							name="Error During Check &amp; for Switch Document &amp; " />
+						<exclusiveGateway id="SAP_0000000277" name="SWITCH: XOR" />
+						<adoc:block>
+							<adoc:branch
+								adocCondition="$SAP:_WI_RESULT = 'Continue Processing / Data&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Modified Manually'">
+								<task id="SAP_0000000297"
+									name="Record Activity 200 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+								<task id="SAP_0000000303"
+									name="Set Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+							</adoc:branch>
+							<adoc:branch
+								adocCondition="$SAP:_WI_RESULT = 'Reject Notification / Cancel&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Processing'">
+								<task id="SAP_0000000285"
+									name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+								<task id="SAP_0000000291"
+									name="Set Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+							</adoc:branch>
+							<adoc:branch type="exception" adocCondition="Exception code: SAP:8991">
+								<task id="SAP_0000000471"
+									name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+								<task id="SAP_0000000476"
+									name="Set Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+							</adoc:branch>
+						</adoc:block>
+						<inclusiveGateway id="end.SAP_0000000277" name="SWITCH" />
+					</adoc:branch>
+					<adoc:branch
+						adocCondition="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'5'">
+						<task id="SAP_0000000080"
+							name="Set Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+					</adoc:branch>
+					<adoc:branch
+						adocCondition="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'6'">
+						<task id="SAP_0000000377"
+							name="Start Agent Information Asynchronously&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+						<task id="SAP_0000000270"
+							name="Set Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+					</adoc:branch>
+					<adoc:branch
+						adocCondition="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'7'">
+						<task id="SAP_0000000139"
+							name="Warning Triggered in Check &amp; for Switch&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Document" />
+						<exclusiveGateway id="SAP_0000000140" name="SWITCH: XOR" />
+						<adoc:block>
+							<adoc:branch
+								adocCondition="$SAP:_WI_RESULT = 'Continue Processing / Data&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Modified Manually'">
+								<task id="SAP_0000000154"
+									name="Record Activity 200 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+								<task id="SAP_0000000160"
+									name="Set Status of Message to 014 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+							</adoc:branch>
+							<adoc:branch
+								adocCondition="$SAP:_WI_RESULT = 'Reject Notification / Cancel&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Processing'">
+								<task id="SAP_0000000148"
+									name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+								<task id="SAP_0000000166" name="Message Status Set to 012" />
+							</adoc:branch>
+							<adoc:branch type="exception" adocCondition="Exception code: SAP:8991">
+								<task id="SAP_0000000413"
+									name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+								<task id="SAP_0000000418" name="Message Status Set to 012" />
+							</adoc:branch>
+						</adoc:block>
+						<inclusiveGateway id="end.SAP_0000000140" name="SWITCH" />
+					</adoc:branch>
+					<adoc:branch
+						adocCondition="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'8'">
+						<task id="SAP_0000000221"
+							name="Unexpected Exception for Check &amp; for Switch&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Document &amp;" />
+						<exclusiveGateway id="SAP_0000000222" name="SWITCH: XOR" />
+						<adoc:block>
+							<adoc:branch
+								adocCondition="$SAP:_WI_RESULT = 'Continue Processing / Data&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Modified Manually'">
+								<task id="SAP_0000000244"
+									name="Record Activity 200 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+								<task id="SAP_0000000250"
+									name="Set Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+							</adoc:branch>
+							<adoc:branch
+								adocCondition="$SAP:_WI_RESULT = 'Reject Notification / Cancel&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Processing'">
+								<task id="SAP_0000000230"
+									name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+								<task id="SAP_0000000236"
+									name="Set Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+							</adoc:branch>
+							<adoc:branch type="exception" adocCondition="Exception code: SAP:8991">
+								<task id="SAP_0000000452"
+									name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+								<task id="SAP_0000000457"
+									name="Set Status of Message to 012 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+							</adoc:branch>
+						</adoc:block>
+						<inclusiveGateway id="end.SAP_0000000222" name="SWITCH" />
+					</adoc:branch>
+					<adoc:branch
+						adocCondition="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING =&#10;&#9;&#9;&#9;&#9;&#9;&#9;'9'">
+						<task id="SAP_0000000174"
+							name="Set Status of Message to 014 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+					</adoc:branch>
+					<adoc:branch adocCondition="" default="true">
+						<task id="SAP_0000000186"
+							name="Error During Check &amp; for Switch Document &amp; " />
+						<exclusiveGateway id="SAP_0000000187" name="SWITCH: XOR" />
+						<adoc:block>
+							<adoc:branch
+								adocCondition="$SAP:_WI_RESULT = 'Continue Processing / Data&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Modified Manually'">
+								<task id="SAP_0000000195"
+									name="Record Activity 200 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+								<task id="SAP_0000000201"
+									name="Set Status of Message to 014 (Rejected)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+							</adoc:branch>
+							<adoc:branch
+								adocCondition="$SAP:_WI_RESULT = 'Reject Notification / Cancel&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;Processing'">
+								<task id="SAP_0000000207"
+									name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+								<task id="SAP_0000000213"
+									name="Set Status of Message to 012 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+							</adoc:branch>
+							<adoc:branch type="exception" adocCondition="Exception code: SAP:8991">
+								<task id="SAP_0000000433"
+									name="Record Activity 201 in Switch Document&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+								<task id="SAP_0000000438"
+									name="Set Status of Message to 012 (Successful)&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+							</adoc:branch>
+						</adoc:block>
+						<inclusiveGateway id="end.SAP_0000000187" name="SWITCH" />
+					</adoc:branch>
+				</adoc:block>
+				<inclusiveGateway id="end.SAP_0000000043" name="SWITCH" />
+				<exclusiveGateway id="SAP_0000000317"
+					name="SWITCH: Notification Rejected or Canceled?" />
+				<adoc:block>
+					<adoc:branch
+						adocCondition="$tns:DOCUMENTSTATUS = '12' or&#10;&#9;&#9;&#9;&#9;&#9;&#9;$tns:DOCUMENTSTATUS = '6'">
+						<exclusiveGateway id="SAP_0000000327" name="SWITCH: Notification Type?" />
+						<adoc:block>
+							<adoc:branch adocCondition="$tns:MSGDATA/EIDESWTMSGDATA-CATEGORY = 'E01' ">
+								<task id="SAP_0000000338" name="Event: Registration Rejected" />
+							</adoc:branch>
+							<adoc:branch adocCondition="" default="true">
+								<task id="SAP_0000000336" name="Event: Termination Rejected" />
+							</adoc:branch>
+						</adoc:block>
+						<inclusiveGateway id="end.SAP_0000000327" name="SWITCH" />
+					</adoc:branch>
+					<adoc:branch adocCondition="" default="true" />
+				</adoc:block>
+				<inclusiveGateway id="end.SAP_0000000317" name="SWITCH" />
+				<exclusiveGateway id="SAP_0000000340"
+					name="SWITCH: Error Occurred During Check?" />
+				<adoc:block>
+					<adoc:branch
+						adocCondition="$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING !=&#10;&#9;&#9;&#9;&#9;&#9;&#9;'0' and $tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING&#10;&#9;&#9;&#9;&#9;&#9;&#9;!= '9' and&#10;&#9;&#9;&#9;&#9;&#9;&#9;$tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING != '3'&#10;&#9;&#9;&#9;&#9;&#9;&#9;and $tns:ERRORCODE/EIDESWTCHECKEXC_DATA-EXC_HANDLING !=&#10;&#9;&#9;&#9;&#9;&#9;&#9;'6'">
+						<exclusiveGateway id="SAP_0000000366"
+							name="SWITCH: Does Notification Object Exist?" />
+						<adoc:block>
+							<adoc:branch adocCondition="$tns:ERRORLOG != ''">
+								<task id="SAP_0000000350" name="Delete Notification Object" />
+							</adoc:branch>
+							<adoc:branch adocCondition="" default="true" />
+						</adoc:block>
+						<inclusiveGateway id="end.SAP_0000000366" name="SWITCH" />
+					</adoc:branch>
+					<adoc:branch adocCondition="" default="true" />
+				</adoc:block>
+				<inclusiveGateway id="end.SAP_0000000340" name="SWITCH" />
+				<endEvent name="End" id="end_of_process" />
+			</adoc:branch>
+		</adoc:block>
+	</process>
+</definitions>

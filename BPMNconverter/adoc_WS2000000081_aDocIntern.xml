@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:xhtml="http://www.w3.org/TR/xhtml1/" xmlns:adoc="http://www.kctdata.cz/abapdoc"
+	xmlns:sapbpml="http://www.bpmi.org/2002/6/BPML" xmlns:saptns="http://www.sap.com"
+	xmlns:dublin="http://dublincore.org/documents/dces/" xmlns:SAP="http://www.sap.com/bc/bmt/wfm"
+	xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+	xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+	xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:activiti="http://activiti.org/bpmn"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://rapilabs.com/definitions/20120204"
+	expressionLanguage="http://www.w3.org/1999/XPath" typeLanguage="http://www.w3.org/2001/XMLSchema">
+	<collaboration id="col.LEAVRQSTHTML">
+		<participant id="part.LEAVRQSTHTML" name="Leave Request with HTML"
+			processRef="LEAVRQSTHTML" />
+	</collaboration>
+	<process id="LEAVRQSTHTML">
+		<laneSet id="lset.LEAVRQSTHTML">
+			<lane id="locator__WF_INITIATOR" name="&amp;_WF_INITIATOR&amp;">
+				<flowNodeRef>SAP_0000000290</flowNodeRef>
+				<flowNodeRef>SAP_0000000192</flowNodeRef>
+			</lane>
+			<lane id="locator_SAP_0000000263" name="AC60100010">
+				<flowNodeRef>SAP_0000000263</flowNodeRef>
+			</lane>
+			<lane name="Background" id="Background">
+				<flowNodeRef>SAP_0000000191</flowNodeRef>
+				<flowNodeRef>SAP_0000000199</flowNodeRef>
+				<flowNodeRef>SAP_0000000204</flowNodeRef>
+				<flowNodeRef>SAP_0000000212</flowNodeRef>
+				<flowNodeRef>SAP_0000000205</flowNodeRef>
+				<flowNodeRef>SAP_0000000232</flowNodeRef>
+				<flowNodeRef>SAP_0000000240</flowNodeRef>
+				<flowNodeRef>SAP_0000000231</flowNodeRef>
+			</lane>
+		</laneSet>
+		<adoc:block>
+			<adoc:branch>
+				<startEvent name="Start" id="start_of_process" />
+				<inclusiveGateway id="SAP_0000000004" name="UNTIL: Resubmission?" />
+				<adoc:block gateId="SAP_0000000004">
+					<adoc:branch adocCondition="">
+						<userTask id="SAP_0000000290" name="Check leave (with HTML)" />
+						<exclusiveGateway id="SAP_0000000187"
+							name="SWITCH: Leave request approved?" />
+						<adoc:block gateId="SAP_0000000187">
+							<adoc:branch adocCondition="$tns:ACTUALSTATE = 'A'">
+								<subProcess id="SAP_0000000191" name="Find and Lock Employee" />
+								<task id="SAP_0000000199" name="Create absence (without dialog)" />
+								<exclusiveGateway id="SAP_0000000201" name="SWITCH: XOR" />
+								<adoc:block gateId="SAP_0000000201">
+									<adoc:branch adocCondition="$SAP:_WI_RESULT = '0'">
+										<task id="SAP_0000000204" name="Unlock employee" />
+										<task id="SAP_0000000212" name="Confirm absence" />
+									</adoc:branch>
+									<adoc:branch adocCondition="$SAP:_WI_RESULT = '1'">
+										<task id="SAP_0000000205" name="Unlock employee" />
+										<userTask id="SAP_0000000263"
+											name="Have absence created by administrator&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+										<exclusiveGateway id="SAP_0000000264" name="SWITCH: XOR" />
+										<adoc:block gateId="SAP_0000000264">
+											<adoc:branch adocCondition="$SAP:_WI_RESULT = '0'">
+												<task id="SAP_0000000231" name="Confirm absence" />
+											</adoc:branch>
+											<adoc:branch type="exception" adocCondition="Exception code: SAP:8993">
+												<task id="SAP_0000000232"
+													name="Report absence error to initiator&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+												<task id="SAP_0000000240"
+													name="Report absence error to approver&#10;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;&#9;" />
+											</adoc:branch>
+										</adoc:block>
+										<inclusiveGateway id="end.SAP_0000000264"
+											name="SWITCH" />
+									</adoc:branch>
+								</adoc:block>
+								<inclusiveGateway id="end.SAP_0000000201" name="SWITCH" />
+							</adoc:branch>
+							<adoc:branch adocCondition="otherwise" default="true">
+								<userTask id="SAP_0000000192" name="Resubmission (with HTML)" />
+							</adoc:branch>
+						</adoc:block>
+						<inclusiveGateway id="end.SAP_0000000187" name="SWITCH" />
+					</adoc:branch>
+					<adoc:branch direction="backward" />
+				</adoc:block>
+				<exclusiveGateway id="end.SAP_0000000004" name="UNTIL: Resubmission?" />
+				<endEvent name="End" id="end_of_process" />
+			</adoc:branch>
+		</adoc:block>
+	</process>
+</definitions>

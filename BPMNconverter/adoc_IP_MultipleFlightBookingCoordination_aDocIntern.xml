@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:sap-extn="http://www.sap.com/xi/extensions"
+	xmlns:sapbpel4ws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+	xmlns:adoc="http://www.kctdata.cz/abapdoc" xmlns:sapbpml="http://www.bpmi.org/2002/6/BPML"
+	xmlns:saptns="http://www.sap.com" xmlns:dublin="http://dublincore.org/documents/dces/"
+	xmlns:SAP="http://www.sap.com/bc/bmt/wfm" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+	xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+	xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+	xmlns:activiti="http://activiti.org/bpmn" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	targetNamespace="http://rapilabs.com/definitions/20120204"
+	expressionLanguage="http://www.w3.org/1999/XPath" typeLanguage="http://www.w3.org/2001/XMLSchema">
+	<collaboration id="col.MultipleFlightBookingCoordination">
+		<participant id="part.MultipleFlightBookingCoordination"
+			name="MultipleFlightBookingCoordination" processRef="MultipleFlightBookingCoordination" />
+	</collaboration>
+	<process id="MultipleFlightBookingCoordination">
+		<laneSet id="lset.MultipleFlightBookingCoordination">
+			<lane name="Integration Engine" id="Background">
+				<flowNodeRef>SplitMultipleBookingOrder</flowNodeRef>
+				<flowNodeRef>Send single booking to airline</flowNodeRef>
+				<flowNodeRef>MergeSuccess</flowNodeRef>
+				<flowNodeRef>SendConfirmation</flowNodeRef>
+				<flowNodeRef>CreateFailureNotification</flowNodeRef>
+				<flowNodeRef>SendFailureNotification</flowNodeRef>
+				<flowNodeRef>CreateCancellationMessage</flowNodeRef>
+				<flowNodeRef>SendCancellation</flowNodeRef>
+			</lane>
+		</laneSet>
+		<adoc:block>
+			<adoc:branch>
+				<startEvent name="Start" id="start_of_process" />
+				<intermediateCatchEvent id="ReceiveMultipleBooking"
+					name="ReceiveMultipleBooking : MultipleBooking">
+					<messageEventDefinition id="msg.ReceiveMultipleBooking" />
+				</intermediateCatchEvent>
+				<task id="SplitMultipleBookingOrder" name="SplitMultipleBookingOrder" />
+				<parallelGateway id="N1008A"
+					name="PARAL.PROCESSING: BookingOrder in BookingOrderList" />
+				<adoc:block gateId="N1008A">
+					<adoc:branch default="true">
+						<sendTask id="Send single booking to airline"
+							name="Send single booking to airline mode: async in/out: BookingOrder/" />
+						<task id="N100C0" name="IncreaseCount" />
+						<intermediateCatchEvent id="ReceiveConfirmation"
+							name="ReceiveConfirmation : AirlineResponse">
+							<messageEventDefinition id="msg.ReceiveConfirmation" />
+						</intermediateCatchEvent>
+						<exclusiveGateway id="CheckResult" name="SWITCH(CheckResult)" />
+						<adoc:block gateId="CheckResult">
+							<adoc:branch adocCondition="Status = &quot;B&quot;;">
+								<task id="N100EA" name="IncrementSuccessCounter" />
+								<task id="N100F7" name="GetStatus" />
+								<task id="N10106" name="StoreConfirmation" />
+							</adoc:branch>
+							<adoc:branch>otherwise</adoc:branch>
+						</adoc:block>
+						<inclusiveGateway id="end.CheckResult" name="SWITCH(CheckResult)" />
+					</adoc:branch>
+				</adoc:block>
+				<inclusiveGateway id="end.N1008A" name="PARAL.PROCESSING" />
+				<exclusiveGateway id="AllConfirmationsReceived"
+					name="SWITCH(AllConfirmationsReceived)" />
+				<adoc:block gateId="AllConfirmationsReceived">
+					<adoc:branch adocCondition=" MsgCount = ConfCount ;">
+						<task id="MergeSuccess" name="MergeSuccess" />
+						<sendTask id="SendConfirmation"
+							name="SendConfirmation mode: async in/out: MultipleConfirmation/" />
+					</adoc:branch>
+					<adoc:branch>
+						otherwise
+						<task id="CreateFailureNotification" name="CreateFailureNotification" />
+						<sendTask id="SendFailureNotification"
+							name="SendFailureNotification mode: async in/out: FailureNotification/" />
+						<parallelGateway id="N101BD"
+							name="PARAL.PROCESSING: ReceivedConfirmation in ConfirmedList" />
+						<adoc:block gateId="N101BD">
+							<adoc:branch default="true">
+								<task id="CreateCancellationMessage" name="CreateCancellationMessage" />
+								<sendTask id="SendCancellation"
+									name="SendCancellation mode: async in/out: AirlineCancel/" />
+							</adoc:branch>
+						</adoc:block>
+						<inclusiveGateway id="end.N101BD" name="PARAL.PROCESSING" />
+					</adoc:branch>
+				</adoc:block>
+				<inclusiveGateway id="end.AllConfirmationsReceived"
+					name="SWITCH(AllConfirmationsReceived)" />
+				<endEvent name="End" id="end_of_process" />
+			</adoc:branch>
+		</adoc:block>
+	</process>
+</definitions>

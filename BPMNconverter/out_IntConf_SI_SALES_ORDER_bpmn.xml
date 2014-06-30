@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:adoc="http://www.kctdata.cz/abapdoc" xmlns:step1="http://www.omg.org/spec/BPMN/20100524/MODEL"
+	xmlns:sapbpel4ws="http://schemas.xmlsoap.org/ws/2003/03/business-process/"
+	xmlns:sapbpml="http://www.bpmi.org/2002/6/BPML" xmlns:saptns="http://www.sap.com"
+	xmlns:dublin="http://dublincore.org/documents/dces/" xmlns:SAP="http://www.sap.com/bc/bmt/wfm"
+	xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+	xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+	xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:activiti="http://activiti.org/bpmn"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<collaboration xmlns:sap-extn="http://www.sap.com/xi/extensions"
+		xmlns:ic="http://sap.com/xi/BASIS" id="col.id1">
+		<participant id="part.id1" name="testpopis" processRef="process.id1" />
+	</collaboration>
+	<process xmlns:sap-extn="http://www.sap.com/xi/extensions"
+		xmlns:ic="http://sap.com/xi/BASIS" id="process.id1" isExecutable="true">
+		<laneSet id="lset.id1">
+			<lane
+				id="CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap_N10001"
+				name="CLOUDCARE_TST">
+				<flowNodeRef>start_of_process</flowNodeRef>
+				<flowNodeRef>CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap
+				</flowNodeRef>
+			</lane>
+			<lane name="SAP PI" id="sapPiId1">
+				<flowNodeRef>asyncMsg1</flowNodeRef>
+				<flowNodeRef>CLOUDCARE_TSTcc_http2aex</flowNodeRef>
+				<flowNodeRef>OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N10067
+				</flowNodeRef>
+				<flowNodeRef>ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N10067
+				</flowNodeRef>
+				<flowNodeRef>OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N100B1
+				</flowNodeRef>
+				<flowNodeRef>ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N100B1
+				</flowNodeRef>
+				<flowNodeRef>A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100
+				</flowNodeRef>
+				<flowNodeRef>cc_aex2idoc_cloudcare-N100E1</flowNodeRef>
+			</lane>
+			<lane id="R30CLNT010_N10045" name="Party: Component: R30CLNT010" />
+			<lane id="A11CLNT211_N10050" name="Party: Component: A11CLNT211">
+				<flowNodeRef>recEcc_aex2idoc_cloudcare</flowNodeRef>
+				<flowNodeRef>recTcc_aex2idoc_cloudcare</flowNodeRef>
+			</lane>
+		</laneSet>
+		<startEvent name="Start" id="start_of_process" />
+		<sendTask id="CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap"
+			name="Send a message: SI_SALES_ORDER" />
+		<sequenceFlow
+			id="2_start_of_process.CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap"
+			name="" sourceRef="start_of_process"
+			targetRef="CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap" />
+		<intermediateCatchEvent name="async message arrived"
+			id="asyncMsg1">
+			<messageEventDefinition id="asyncMsg1EvDef1" />
+		</intermediateCatchEvent>
+		<sequenceFlow
+			id="3_CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap.asyncMsg1"
+			name="" sourceRef="CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap"
+			targetRef="asyncMsg1" />
+		<receiveTask id="CLOUDCARE_TSTcc_http2aex" name="Comm.channel: cc_http2aex" />
+		<sequenceFlow id="4_asyncMsg1.CLOUDCARE_TSTcc_http2aex"
+			name="" sourceRef="asyncMsg1" targetRef="CLOUDCARE_TSTcc_http2aex" />
+		<complexGateway name="Receiver determination" id="recDetId1" />
+		<sequenceFlow id="5_CLOUDCARE_TSTcc_http2aex.recDetId1"
+			name="" sourceRef="CLOUDCARE_TSTcc_http2aex" targetRef="recDetId1" />
+		<endEvent name="no processing defined" id="endEN10043">
+			<terminateEventDefinition id="termEvent.N10043" />
+		</endEvent>
+		<sequenceFlow id="1_recDetId1.endEN10043" name="R30CLNT010 "
+			sourceRef="recDetId1" targetRef="endEN10043" />
+		<complexGateway name="Rec.Interf.determination" id="recIntDetA11CLNT211" />
+		<sequenceFlow id="1_recDetId1.recIntDetA11CLNT211" name="A11CLNT211 "
+			sourceRef="recDetId1" targetRef="recIntDetA11CLNT211" />
+		<task
+			id="OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N10067"
+			name="Oper.Mapping: OM_SALES_ORDER_CREATE (operation: CREATE)" />
+		<sequenceFlow
+			id="1_recIntDetA11CLNT211.OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N10067"
+			name="/data/cbs_document/posting_date CP ++052014" sourceRef="recIntDetA11CLNT211"
+			targetRef="OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N10067" />
+		<task adocNoFollowerSeqFlow="X"
+			id="ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N10067"
+			name="Receiver interface: ZCBS_DOCUMENT.ZCBS_DOCUMENT"
+			adocGoToId="A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100" />
+		<sequenceFlow
+			id="2_OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N10067.ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N10067"
+			name=""
+			sourceRef="OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N10067"
+			targetRef="ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N10067" />
+		<sequenceFlow
+			id="2_ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N10067.A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100"
+			name="GoTo"
+			sourceRef="ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N10067"
+			targetRef="A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100" />
+		<task
+			id="OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N100B1"
+			name="Oper.Mapping: OM_SALES_ORDER_CREATE (operation: CREATE)" />
+		<sequenceFlow
+			id="1_recIntDetA11CLNT211.OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N100B1"
+			name="" sourceRef="recIntDetA11CLNT211"
+			targetRef="OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N100B1" />
+		<task adocNoFollowerSeqFlow="X"
+			id="ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N100B1"
+			name="Receiver interface: ZCBS_DOCUMENT.ZCBS_DOCUMENT"
+			adocGoToId="A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100" />
+		<sequenceFlow
+			id="2_OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N100B1.ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N100B1"
+			name=""
+			sourceRef="OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N100B1"
+			targetRef="ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N100B1" />
+		<sequenceFlow
+			id="2_ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N100B1.A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100"
+			name="GoTo"
+			sourceRef="ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N100B1"
+			targetRef="A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100" />
+		<sendTask adocNoPredecessorSeqFlow="X"
+			id="A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100"
+			name="Comm.channel: cc_aex2idoc_cloudcare" />
+		<intermediateCatchEvent name="async message arrived"
+			id="recEcc_aex2idoc_cloudcare">
+			<messageEventDefinition id="asyncMsg1EvDef1" />
+		</intermediateCatchEvent>
+		<sequenceFlow
+			id="2_A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100.recEcc_aex2idoc_cloudcare"
+			name=""
+			sourceRef="A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100"
+			targetRef="recEcc_aex2idoc_cloudcare" />
+		<receiveTask id="recTcc_aex2idoc_cloudcare"
+			name="Receive a message: ZCBS_DOCUMENT.ZCBS_DOCUMENT" />
+		<sequenceFlow id="3_recEcc_aex2idoc_cloudcare.recTcc_aex2idoc_cloudcare"
+			name="" sourceRef="recEcc_aex2idoc_cloudcare" targetRef="recTcc_aex2idoc_cloudcare" />
+		<endEvent id="endEcc_aex2idoc_cloudcare" />
+		<sequenceFlow id="4_recTcc_aex2idoc_cloudcare.endEcc_aex2idoc_cloudcare"
+			name="" sourceRef="recTcc_aex2idoc_cloudcare" targetRef="endEcc_aex2idoc_cloudcare" />
+	</process>
+	<bpmndi:BPMNDiagram id="BPMNDiagram_col.id1">
+		<bpmndi:BPMNPlane id="BPMNPlane_col.id1" bpmnElement="col.id1">
+			<bpmndi:BPMNShape bpmnElement="part.id1" id="BPMNShape_part.id1">
+				<omgdc:Bounds height="960" width="2650" x="40" y="80" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape
+				bpmnElement="CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap_N10001"
+				id="lane:CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap_N10001">
+				<omgdc:Bounds height="240" width="2600" x="90" y="80" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="sapPiId1" id="lane:sapPiId1">
+				<omgdc:Bounds height="360" width="2600" x="90" y="320" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="R30CLNT010_N10045"
+				id="lane:R30CLNT010_N10045">
+				<omgdc:Bounds height="120" width="2600" x="90" y="680" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="A11CLNT211_N10050"
+				id="lane:A11CLNT211_N10050">
+				<omgdc:Bounds height="240" width="2600" x="90" y="800" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="start_of_process"
+				id="startEventstart_of_process">
+				<omgdc:Bounds height="40" width="40" x="340" y="110" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape
+				bpmnElement="CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap"
+				id="sendTaskCLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap">
+				<omgdc:Bounds height="80" width="100" x="540"
+					y="122.00000000000001" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="asyncMsg1"
+				id="intermediateCatchEventasyncMsg1">
+				<omgdc:Bounds height="40" width="40" x="740" y="374" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="CLOUDCARE_TSTcc_http2aex"
+				id="receiveTaskCLOUDCARE_TSTcc_http2aex">
+				<omgdc:Bounds height="80" width="100" x="940" y="386" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="recDetId1"
+				id="complexGatewayrecDetId1">
+				<omgdc:Bounds height="50" width="50" x="1140" y="398" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="endEN10043" id="endEventendEN10043">
+				<omgdc:Bounds height="40" width="40" x="1340" y="410" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="recIntDetA11CLNT211"
+				id="complexGatewayrecIntDetA11CLNT211">
+				<omgdc:Bounds height="50" width="50" x="1360" y="530" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape
+				bpmnElement="OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N10067"
+				id="taskOM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N10067">
+				<omgdc:Bounds height="80" width="100" x="1540" y="422" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape
+				bpmnElement="ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N10067"
+				id="taskZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N10067">
+				<omgdc:Bounds height="80" width="100" x="1740" y="434" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape
+				bpmnElement="OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N100B1"
+				id="taskOM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N100B1">
+				<omgdc:Bounds height="80" width="100" x="1560" y="542" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape
+				bpmnElement="ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N100B1"
+				id="taskZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N100B1">
+				<omgdc:Bounds height="80" width="100" x="1760" y="554" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape
+				bpmnElement="A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100"
+				id="sendTaskA11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100">
+				<omgdc:Bounds height="80" width="100" x="1940" y="446" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="recEcc_aex2idoc_cloudcare"
+				id="intermediateCatchEventrecEcc_aex2idoc_cloudcare">
+				<omgdc:Bounds height="40" width="40" x="2140" y="938" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="recTcc_aex2idoc_cloudcare"
+				id="receiveTaskrecTcc_aex2idoc_cloudcare">
+				<omgdc:Bounds height="80" width="100" x="2340" y="830" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNShape bpmnElement="endEcc_aex2idoc_cloudcare"
+				id="endEventendEcc_aex2idoc_cloudcare">
+				<omgdc:Bounds height="40" width="40" x="2540" y="842" />
+			</bpmndi:BPMNShape>
+			<bpmndi:BPMNEdge
+				bpmnElement="2_start_of_process.CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap"
+				id="edg:2_start_of_process.CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap">
+				<omgdi:waypoint x="380" y="130" />
+				<omgdi:waypoint x="540" y="162" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge
+				bpmnElement="3_CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap.asyncMsg1"
+				id="edg:3_CLOUDCARE_TSTSI_SALES_ORDERhttp//kct.com/cz/cloudcare2sap.asyncMsg1">
+				<omgdi:waypoint x="640" y="162" />
+				<omgdi:waypoint x="740" y="394" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="4_asyncMsg1.CLOUDCARE_TSTcc_http2aex"
+				id="edg:4_asyncMsg1.CLOUDCARE_TSTcc_http2aex">
+				<omgdi:waypoint x="780" y="394" />
+				<omgdi:waypoint x="940" y="426" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="5_CLOUDCARE_TSTcc_http2aex.recDetId1"
+				id="edg:5_CLOUDCARE_TSTcc_http2aex.recDetId1">
+				<omgdi:waypoint x="1040" y="426" />
+				<omgdi:waypoint x="1140" y="423" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_recDetId1.endEN10043"
+				id="edg:1_recDetId1.endEN10043">
+				<omgdi:waypoint x="1190" y="423" />
+				<omgdi:waypoint x="1340" y="430" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge bpmnElement="1_recDetId1.recIntDetA11CLNT211"
+				id="edg:1_recDetId1.recIntDetA11CLNT211">
+				<omgdi:waypoint x="1190" y="423" />
+				<omgdi:waypoint x="1360" y="555" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge
+				bpmnElement="1_recIntDetA11CLNT211.OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N10067"
+				id="edg:1_recIntDetA11CLNT211.OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N10067">
+				<omgdi:waypoint x="1410" y="555" />
+				<omgdi:waypoint x="1540" y="462" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge
+				bpmnElement="2_OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N10067.ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N10067"
+				id="edg:2_OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N10067.ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N10067">
+				<omgdi:waypoint x="1640" y="462" />
+				<omgdi:waypoint x="1740" y="474" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge
+				bpmnElement="2_ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N10067.A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100"
+				id="edg:2_ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N10067.A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100">
+				<omgdi:waypoint x="1840" y="474" />
+				<omgdi:waypoint x="1940" y="486" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge
+				bpmnElement="1_recIntDetA11CLNT211.OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N100B1"
+				id="edg:1_recIntDetA11CLNT211.OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N100B1">
+				<omgdi:waypoint x="1410" y="555" />
+				<omgdi:waypoint x="1560" y="582" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge
+				bpmnElement="2_OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N100B1.ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N100B1"
+				id="edg:2_OM_SALES_ORDER_CREATEhttp//kct.com/cz/cloudcare2sap30371a70-7dbf-11e3-9488-e3f00a03040f_N100B1.ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N100B1">
+				<omgdi:waypoint x="1660" y="582" />
+				<omgdi:waypoint x="1760" y="594" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge
+				bpmnElement="2_ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N100B1.A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100"
+				id="edg:2_ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100_N100B1.A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100">
+				<omgdi:waypoint x="1860" y="594" />
+				<omgdi:waypoint x="1940" y="486" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge
+				bpmnElement="2_A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100.recEcc_aex2idoc_cloudcare"
+				id="edg:2_A11CLNT211ZCBS_DOCUMENT.ZCBS_DOCUMENTurnsap-comdocumentsapidocmessagesc9e58ff3-46ee-11df-b912-e7930a424100.recEcc_aex2idoc_cloudcare">
+				<omgdi:waypoint x="2040" y="486" />
+				<omgdi:waypoint x="2140" y="958" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge
+				bpmnElement="3_recEcc_aex2idoc_cloudcare.recTcc_aex2idoc_cloudcare"
+				id="edg:3_recEcc_aex2idoc_cloudcare.recTcc_aex2idoc_cloudcare">
+				<omgdi:waypoint x="2180" y="958" />
+				<omgdi:waypoint x="2340" y="870" />
+			</bpmndi:BPMNEdge>
+			<bpmndi:BPMNEdge
+				bpmnElement="4_recTcc_aex2idoc_cloudcare.endEcc_aex2idoc_cloudcare"
+				id="edg:4_recTcc_aex2idoc_cloudcare.endEcc_aex2idoc_cloudcare">
+				<omgdi:waypoint x="2440" y="870" />
+				<omgdi:waypoint x="2540" y="862" />
+			</bpmndi:BPMNEdge>
+		</bpmndi:BPMNPlane>
+	</bpmndi:BPMNDiagram>
+</definitions>
